@@ -2,6 +2,8 @@ package competitive.programming.utils;
 
 public interface Constants {
 
+    String PLUGIN_TASK_GROUP = "Competitive Programming Tasks";
+
     interface FileCreator {
         String PLATFORM = "platform";
         String NAME = "name";
