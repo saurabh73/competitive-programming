@@ -3,8 +3,10 @@
  */
 package competitive.programming.gradle.plugin;
 
-import org.gradle.api.Project;
+import competitive.programming.models.Platform;
+import competitive.programming.task.ProblemFileCreator;
 import org.gradle.api.Plugin;
+import org.gradle.api.Project;
 
 /**
  * A simple 'hello world' plugin.
@@ -12,8 +14,20 @@ import org.gradle.api.Plugin;
 public class CompetitiveProgrammingPlugin implements Plugin<Project> {
     public void apply(Project project) {
         // Register a task
-        project.getTasks().register("greeting", task -> {
-            task.doLast(s -> System.out.println("Hello from plugin 'competitive.programming.gradle.plugin.greeting'"));
+        project.getTasks().register("initProblem", task -> {
+            // Check if base directory exists
+            task.doFirst(s -> {
+
+            });
+            task.doLast(s -> {
+                ProblemFileCreator fileCreator = new ProblemFileCreator("Saurabh Dutta");
+                fileCreator.takePlatformInput();
+                if (fileCreator.getPlatform().equals(Platform.LEETCODE)) {
+                    fileCreator.generateLeetcodeFile();
+                } else {
+                    System.err.println("Platform Not Supported");
+                }
+            });
         });
     }
 }

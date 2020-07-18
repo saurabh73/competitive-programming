@@ -19,17 +19,29 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
     // Use JUnit test framework for unit tests
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    implementation group: 'org.beryx', name: 'text-io', version: '3.4.1'
+
+    implementation group: 'org.jooq', name: 'joor-java-8', version: '0.9.13'
+    implementation group: 'com.google.googlejavaformat', name: 'google-java-format', version: '1.7'
+    implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
+    implementation group: 'org.apache.velocity', name: 'velocity', version: '1.7'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     testImplementation 'junit:junit:4.12'
 }
 
 gradlePlugin {
     // Define the plugin
     plugins {
-        greeting {
+        initProblem {
             id = 'competitive.programming'
             implementationClass = 'competitive.programming.gradle.plugin.CompetitiveProgrammingPlugin'
         }

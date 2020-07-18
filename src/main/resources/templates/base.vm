@@ -1,0 +1,10 @@
+package ${basePackage};
+
+import java.io.InputStream;
+
+/**
+* @author ${author}
+**/
+public interface ISolution {
+    void solve(InputStream in);
+}

@@ -272,4 +272,6 @@ gradle-app.setting
 ### Gradle Patch ###
 **/build/
 
+### Nohup file
+nohup.out
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,intellij+all,eclipse,java,gradle,groovy,netbeans,sublimetext,notepadpp

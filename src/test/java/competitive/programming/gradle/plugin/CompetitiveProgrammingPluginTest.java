@@ -5,6 +5,7 @@ package competitive.programming.gradle.plugin;
 
 import org.gradle.testfixtures.ProjectBuilder;
 import org.gradle.api.Project;
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -12,7 +13,9 @@ import static org.junit.Assert.*;
  * A simple unit test for the 'competitive.programming.gradle.plugin.greeting' plugin.
  */
 public class CompetitiveProgrammingPluginTest {
-    @Test public void pluginRegistersATask() {
+    @Test
+    @Ignore
+    public void pluginRegistersATask() {
         // Create a test project and apply the plugin
         Project project = ProjectBuilder.builder().build();
         project.getPlugins().apply("competitive.programming");
