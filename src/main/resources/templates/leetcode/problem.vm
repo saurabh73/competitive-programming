@@ -1,15 +1,15 @@
 package ${basePackage}.leetcode.problem${serial_no};
-import  ${basePackage}.ISolution;
+import  ${basePackage}.base.ISolution;
 import java.io.InputStream;
 
 /**
 *
-* @author ${author}
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end ${NEWLINE}*
 * #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end ${NEWLINE}*
 **/
 public class ${name} implements ISolution {
     @Override
     public void solve(InputStream in) {
-    //TODO: Implement Solution
+        //TODO: Implement Solution
     }
 }

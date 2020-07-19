@@ -4,7 +4,7 @@
 package competitive.programming.gradle.plugin;
 
 import competitive.programming.models.Platform;
-import competitive.programming.task.ProblemFileCreator;
+import competitive.programming.tasks.ProblemFileCreatorTask;
 import competitive.programming.utils.Constants;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
@@ -14,24 +14,7 @@ import org.gradle.api.Project;
  */
 public class CompetitiveProgrammingPlugin implements Plugin<Project> {
     public void apply(Project project) {
-        // Register a task
-        project.getTasks().register("initProblem", task -> {
-            task.setGroup(Constants.PLUGIN_TASK_GROUP);
-            task.setDescription("Generate Problem Java Files");
-
-            // Check if base directory exists
-            task.doFirst(s -> {
-
-            });
-            task.doLast(s -> {
-                ProblemFileCreator fileCreator = new ProblemFileCreator("Saurabh Dutta");
-                fileCreator.takePlatformInput();
-                if (fileCreator.getPlatform().equals(Platform.LEETCODE)) {
-                    fileCreator.generateLeetcodeFile();
-                } else {
-                    System.err.println("Platform Not Supported");
-                }
-            });
-        });
+        project.getExtensions().create("competitiveProgramming", CompetitiveProgrammingExtension.class);
+        project.getTasks().register("initProblem", ProblemFileCreatorTask.class);
     }
 }

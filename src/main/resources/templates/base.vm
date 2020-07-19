@@ -1,9 +1,9 @@
-package ${basePackage};
+package ${basePackage}.base;
 
 import java.io.InputStream;
 
 /**
-* @author ${author}
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end ${NEWLINE}*
 **/
 public interface ISolution {
     void solve(InputStream in);

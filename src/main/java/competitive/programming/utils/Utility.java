@@ -1,5 +1,8 @@
 package competitive.programming.utils;
 
+import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
+import org.apache.commons.lang3.StringUtils;
+
 import java.net.URL;
 
 public class Utility {
@@ -23,5 +26,19 @@ public class Utility {
             }
         }
         return  null;
+    }
+
+    public static void validatedExtension(CompetitiveProgrammingExtension extension) {
+        if (extension == null) {
+            throw new IllegalStateException("Gradle Plugin not initialized");
+        }
+        String basePackage =  extension.getBasePackage();
+
+        if (basePackage == null || !basePackage.matches(Constants.PACKAGE_REGEX)) {
+            throw new IllegalStateException("Invalid Base Package");
+        }
+        if (StringUtils.isEmpty(extension.getAuthor())) {
+            throw new IllegalStateException("Invalid Author Name");
+        }
     }
 }
