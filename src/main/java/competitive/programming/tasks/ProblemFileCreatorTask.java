@@ -5,6 +5,7 @@ import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.models.Platform;
 import competitive.programming.utils.Constants;
 import competitive.programming.utils.Utility;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -71,33 +72,37 @@ public class ProblemFileCreatorTask extends DefaultTask {
 
     @TaskAction
     public void taskAction() throws IOException {
-            this.prepareAction();
-            Scanner scanner = new Scanner(System.in);
-            Platform platform = takePlatformInput(scanner);
-            if (platform != null) {
-                switch (platform) {
-                    case LEETCODE:
-                        leetcodeProblemGenerator(scanner);
-                        break;
-                    case CODECHEF:
-                        codechefProblemGenerator();
-                    default:
-                        project.getLogger().error("Platform not supported");
-                        throw new RuntimeException("Platform not supported");
-                }
+        this.prepareAction();
+        Scanner scanner = new Scanner(System.in);
+
+        Platform platform = takePlatformInput(scanner);
+        if (platform != null) {
+            switch (platform) {
+                case LEETCODE:
+                    leetcodeProblemGenerator(scanner);
+                    break;
+                case CODECHEF:
+                    codechefProblemGenerator();
+                default:
+                    project.getLogger().error("Platform not supported");
+                    throw new RuntimeException("Platform not supported");
             }
-            throw new RuntimeException("Platform not supported");
+        }
+        else {
+            throw new RuntimeException("Invalid options selected");
+        }
+
     }
 
     private Platform takePlatformInput(Scanner scanner) {
         StringBuilder optionsBuilder = new StringBuilder("Select problem platform").append("\n");
-        for (Platform value: Platform.values()) {
-            optionsBuilder.append(value.ordinal()).append(" ").append(value).append("\n");
+        for (Platform value : Platform.values()) {
+            optionsBuilder.append(value.ordinal() + 1).append(" ").append(value).append("\n");
         }
-        System.out.println(optionsBuilder);
+        System.out.println(optionsBuilder.toString().trim());
         int platformInput = scanner.nextInt();
-        for (Platform value: Platform.values()) {
-            if (value.ordinal() == platformInput) {
+        for (Platform value : Platform.values()) {
+            if ((value.ordinal() + 1) == platformInput) {
                 return value;
             }
         }
@@ -109,7 +114,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
 
     private void leetcodeProblemGenerator(Scanner scanner) throws IOException {
         System.out.println("Enter Problem Link:");
-        String link = scanner.nextLine();
+        String link = scanner.next();
         String problemName = parseLeetcodeFileName(link);
         if (Character.isDigit(problemName.charAt(0))) {
             problemName = "Problem" + problemName;
@@ -124,7 +129,13 @@ public class ProblemFileCreatorTask extends DefaultTask {
             throw new MalformedURLException("Domain not Leetcode");
         }
         String[] path = problemUrl.getPath().split("/");
-        return CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, path[path.length - 1].toLowerCase());
+        ArrayUtils.reverse(path);
+        for (String pathSegment: path) {
+            if (!pathSegment.matches("[\\d]+")) {
+                return CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, pathSegment.toLowerCase());
+            }
+        }
+        return "LeetcodeProblem";
     }
 
     private void generateProblemFile(Platform platform, String name, String link) throws IOException {

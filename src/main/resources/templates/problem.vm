@@ -9,7 +9,7 @@ import java.io.InputStream;
 **/
 public class ${name} implements ISolution {
     @Override
-    public void solve(InputStream in) {
+    public void solve(InputStream in) throws IOException {
         //TODO: Implement Solution
     }
 }

@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class CompetitiveProgrammingExtension {
-    private String basePackage;
+    private String basePackage = "competitive.programming.practice";
     private String author;
     private String githubUsername;
     private String baseOutputPath = "output";

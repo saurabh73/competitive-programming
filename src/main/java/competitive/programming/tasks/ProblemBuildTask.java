@@ -229,6 +229,7 @@ public class ProblemBuildTask extends DefaultTask {
                 final String importedClassPath = importToPath(line);
                 if (!knownFiles.contains(importedClassPath)) {
                     if (Paths.get(importedClassPath).toFile().exists()) {
+                        logger.debug("Non Standard inport {}", line);
                         innerClasses.put(importedClassPath, processFile(importedClassPath));
                     }
                     else {

@@ -63,9 +63,9 @@ public class ProblemExecutorTask extends DefaultTask {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter full class name to execute");
-        inputMap.put("INPUT_CLASS", scanner.nextLine());
+        inputMap.put("INPUT_CLASS", scanner.next());
         System.out.println("Test input file [default: input.txt]");
-        String testInputFileName = scanner.nextLine();
+        String testInputFileName = scanner.next();
         testInputFileName = StringUtils.isEmpty(testInputFileName) ? "input.txt" : testInputFileName;
         inputMap.put("INPUT_FILE", testInputFileName);
         return inputMap;
