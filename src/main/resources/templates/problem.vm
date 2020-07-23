@@ -1,4 +1,4 @@
-package ${basePackage}.leetcode.problem${serial_no};
+package ${basePackage}.${platform}.problem${serial_no};
 import  ${basePackage}.base.ISolution;
 import java.io.InputStream;
 

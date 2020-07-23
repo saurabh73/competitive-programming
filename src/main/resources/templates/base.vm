@@ -5,6 +5,6 @@ import java.io.InputStream;
 /**
 * @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end ${NEWLINE}*
 **/
-public interface ISolution {
+public interface ISolution throws Exception {
     void solve(InputStream in);
 }

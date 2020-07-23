@@ -1,0 +1,9 @@
+import ${basePackage}.base.ISolution;
+import ${importPath};
+
+public class Solution {
+    public static void main(String[] args) throws Exception {
+        ISolution solution = new ${className}();
+        solution.solve(System.in);
+    }
+}

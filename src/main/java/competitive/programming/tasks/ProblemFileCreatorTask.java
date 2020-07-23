@@ -17,19 +17,19 @@ import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.OptionalInt;
 
-
+/**
+ * @author Saurabh Dutta <saurabh73>
+ *     Task method for initProblem Gradle task
+ */
 public class ProblemFileCreatorTask extends DefaultTask {
 
     private final TextIO textIO;
@@ -53,37 +53,29 @@ public class ProblemFileCreatorTask extends DefaultTask {
         // add Variables to context
         context.put("StringUtils", StringUtils.class);
         context.put("NEWLINE", System.lineSeparator());
-        context.put(Constants.FileCreator.AUTHOR, extension.getAuthor());
-        context.put(Constants.FileCreator.GITHUB_USERNAME, extension.getGithubUsername());
-        context.put(Constants.FileCreator.BASE_PACKAGE, extension.getBasePackage());
-
+        context.put(Constants.AUTHOR, extension.getAuthor());
+        context.put(Constants.GITHUB_USERNAME, extension.getGithubUsername());
+        context.put(Constants.BASE_PACKAGE, extension.getBasePackage());
     }
 
     private void prepareAction() throws IOException {
-        String baseFileName = "ISolution.java";
-        Path targetFilePath = Paths.get(getBasePath(), "base", baseFileName);
+        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "base", "ISolution.java");
         if (!targetFilePath.toFile().exists()) {
             // Add Missing Directory
             if (!targetFilePath.toFile().getParentFile().exists()) {
                 targetFilePath.toFile().getParentFile().mkdirs();
             }
-            generateFile("/templates/base.vm", targetFilePath.toFile());
+            Utility.writeFileWithVelocityTemplate("/templates/base.vm", targetFilePath.toFile(), context);
         }
     }
 
-    private String getBasePath() {
-        String projectDir = this.project.getProjectDir().getAbsolutePath();
-        String baseSourcePath = this.extension.getBaseSourcePath();
-        String basePackagePath = this.extension.getBasePackage().replaceAll("\\.", File.separator);
-        return Paths.get(projectDir, baseSourcePath, basePackagePath).toFile().getAbsolutePath();
-    }
 
 
-    @TaskAction()
+    @TaskAction
     public void taskAction() throws IOException {
         try {
-            prepareAction();
-            Platform platform = this.textIO.newEnumInputReader(Platform.class).read("Select Problem Platform");
+            this.prepareAction();
+            Platform platform = this.textIO.newEnumInputReader(Platform.class).read("Select problem platform");
             switch (platform) {
                 case LEETCODE:
                     leetcodeProblemGenerator();
@@ -91,8 +83,8 @@ public class ProblemFileCreatorTask extends DefaultTask {
                 case CODECHEF:
                     codechefProblemGenerator();
                 default:
-                    System.out.println("Platform Not Supported");
-                    break;
+                    project.getLogger().error("Platform not supported");
+                    throw new RuntimeException("Platform not supported");
             }
         } finally {
             this.textIO.dispose();
@@ -103,8 +95,11 @@ public class ProblemFileCreatorTask extends DefaultTask {
     }
 
     private void leetcodeProblemGenerator() throws IOException {
-        String link = this.textIO.newStringInputReader().read("Enter Problem Link");
+        String link = this.textIO.newStringInputReader().read("Enter problem link");
         String problemName = parseLeetcodeFileName(link);
+        if (Character.isDigit(problemName.charAt(0))) {
+            problemName = "Problem"+problemName;
+        }
         generateProblemFile(Platform.LEETCODE, problemName, link);
     }
 
@@ -122,28 +117,23 @@ public class ProblemFileCreatorTask extends DefaultTask {
         String platformName = platform.name().toLowerCase();
         String baseFileName = name + Constants.JAVA_EXTENSION;
         String platformPath = platform.name().toLowerCase();
-        Path targetFilePath = Paths.get(getBasePath(), platformPath);
+        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), platformPath);
         String serialNo = getProblemSerialNumber(targetFilePath.toFile());
 
-        context.put(Constants.FileCreator.PLATFORM, platformName);
-        context.put(Constants.FileCreator.NAME, name);
-        context.put(Constants.FileCreator.LINK, link);
+        context.put(Constants.PLATFORM, platformName);
+        context.put(Constants.NAME, name);
+        context.put(Constants.LINK, link);
         context.put("serial_no", serialNo);
 
         // Determine File name
-        File problemFile = Paths.get(targetFilePath.toFile().getAbsolutePath(), "problem" + serialNo, baseFileName).toFile();
-        generateFile(String.format(Constants.TEMPLATES_PROBLEM, platform.name().toLowerCase()), problemFile);
+        File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
+        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATES_PROBLEM, problemFile, context);
+
+        // Generate Input Text File
+        Paths.get(problemFile.getParentFile().getAbsolutePath(), "input.txt").toFile().createNewFile();
     }
 
-    private void generateFile(String templateFile, File problemFile) throws IOException {
-        System.out.println("Writing File to Path: " + problemFile.toURI());
-        // generate structure
-        problemFile.getParentFile().mkdirs();
-        Writer writer = new FileWriter(problemFile);
-        Velocity.mergeTemplate(templateFile, StandardCharsets.UTF_8.displayName(), context, writer);
-        writer.flush();
-        writer.close();
-    }
+
 
 
     private String getProblemSerialNumber(File file) {
