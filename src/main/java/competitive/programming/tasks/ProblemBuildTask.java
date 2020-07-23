@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 public class ProblemBuildTask extends DefaultTask {
 
     private static final String NEW_LINE = System.getProperty("line.separator");
-    private static final String PATH_SEPARATOR = File.separator.equalsIgnoreCase("\\") ? "\\": "/";
+    private static final String PATH_SEPARATOR = File.separator.equalsIgnoreCase("\\") ? "\\" : "/";
     private final CompetitiveProgrammingExtension extension;
     private final Project project;
     private final VelocityContext context;
@@ -104,7 +104,7 @@ public class ProblemBuildTask extends DefaultTask {
         classLoader.loadClass(inputClassName);
         String projectDir = this.project.getProjectDir().getAbsolutePath();
         String baseSourcePath = this.extension.getBaseSourcePath();
-        File javaFile = Paths.get(projectDir, baseSourcePath, inputClassName.replaceAll("\\.",  PATH_SEPARATOR) + Constants.JAVA_EXTENSION).toFile();
+        File javaFile = Paths.get(projectDir, baseSourcePath, inputClassName.replaceAll("\\.", PATH_SEPARATOR) + Constants.JAVA_EXTENSION).toFile();
 
         String entryFile = this.buildMainFile(inputClassName);
         final ClassCode treated = this.processFile(entryFile);
@@ -134,8 +134,9 @@ public class ProblemBuildTask extends DefaultTask {
         String finalSource = source;
         Utility.ignoringExc(() -> Reflect.compile(className, finalSource, new CompileOptions().processors(annotationProcessor)));
         if (!annotationProcessor.getMethodSignatures().isEmpty()) {
-            source = source.replace(Constants.IMPORT+ supportedAnnotation, Constants.EMPTY_STRING)
-                    .replace("@"+Utility.getClassName(supportedAnnotation), Constants.EMPTY_STRING);
+            source = source.replace(Constants.IMPORT + supportedAnnotation + Constants.SEMI_COLON, Constants.EMPTY_STRING)
+
+                    .replace("@" + Utility.getClassName(supportedAnnotation), Constants.EMPTY_STRING);
             StringBuilder sourceBuilder = new StringBuilder(source.substring(0, source.lastIndexOf(Constants.END_CURLY_BRACE)));
             MethodSignature signature = annotationProcessor.getMethodSignatures().get(0);
 
