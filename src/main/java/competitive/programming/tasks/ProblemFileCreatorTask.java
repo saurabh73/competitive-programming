@@ -28,7 +28,7 @@ import java.util.OptionalInt;
 
 /**
  * @author Saurabh Dutta <saurabh73>
- *     Task method for initProblem Gradle task
+ * Task method for initProblem Gradle task
  */
 public class ProblemFileCreatorTask extends DefaultTask {
 
@@ -70,7 +70,6 @@ public class ProblemFileCreatorTask extends DefaultTask {
     }
 
 
-
     @TaskAction
     public void taskAction() throws IOException {
         try {
@@ -86,7 +85,8 @@ public class ProblemFileCreatorTask extends DefaultTask {
                     project.getLogger().error("Platform not supported");
                     throw new RuntimeException("Platform not supported");
             }
-        } finally {
+        }
+        finally {
             this.textIO.dispose();
         }
     }
@@ -98,7 +98,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
         String link = this.textIO.newStringInputReader().read("Enter problem link");
         String problemName = parseLeetcodeFileName(link);
         if (Character.isDigit(problemName.charAt(0))) {
-            problemName = "Problem"+problemName;
+            problemName = "Problem" + problemName;
         }
         generateProblemFile(Platform.LEETCODE, problemName, link);
     }
@@ -132,8 +132,6 @@ public class ProblemFileCreatorTask extends DefaultTask {
         // Generate Input Text File
         Paths.get(problemFile.getParentFile().getAbsolutePath(), "input.txt").toFile().createNewFile();
     }
-
-
 
 
     private String getProblemSerialNumber(File file) {

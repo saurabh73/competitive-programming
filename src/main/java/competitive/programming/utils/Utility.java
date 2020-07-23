@@ -78,6 +78,6 @@ public class Utility {
     }
 
     public static String getClassName(String fullClassName) {
-        return fullClassName.substring(fullClassName.lastIndexOf(".")+1);
+        return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
     }
 }

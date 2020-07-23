@@ -134,8 +134,8 @@ public class ProblemBuildTask extends DefaultTask {
         String finalSource = source;
         Utility.ignoringExc(() -> Reflect.compile(className, finalSource, new CompileOptions().processors(annotationProcessor)));
         if (!annotationProcessor.getMethodSignatures().isEmpty()) {
-            source = source.replace(Constants.IMPORT + supportedAnnotation + Constants.SEMI_COLON, Constants.EMPTY_STRING)
-
+            source = source
+                    .replace(Constants.IMPORT + supportedAnnotation + Constants.SEMI_COLON, Constants.EMPTY_STRING)
                     .replace("@" + Utility.getClassName(supportedAnnotation), Constants.EMPTY_STRING);
             StringBuilder sourceBuilder = new StringBuilder(source.substring(0, source.lastIndexOf(Constants.END_CURLY_BRACE)));
             MethodSignature signature = annotationProcessor.getMethodSignatures().get(0);
