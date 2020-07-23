@@ -4,7 +4,12 @@ package competitive.programming.models;
  * @author Saurabh Dutta <saurabh73>
  */
 public enum Platform {
-    LEETCODE, HACKEREARTH, CODECHEF, HACKERRANK;
+    // supported platforms
+    LEETCODE,
+    HACKEREARTH,
+    CODECHEF,
+    HACKERRANK;
+
 
     public static String getPattern() {
         StringBuilder patternBuilder = new StringBuilder();

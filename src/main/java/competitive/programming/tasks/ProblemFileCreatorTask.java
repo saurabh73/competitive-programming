@@ -10,8 +10,6 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
-import org.beryx.textio.TextIO;
-import org.beryx.textio.TextIoFactory;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskAction;
@@ -25,6 +23,9 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.OptionalInt;
+import java.util.Scanner;
+
+;
 
 /**
  * @author Saurabh Dutta <saurabh73>
@@ -32,7 +33,6 @@ import java.util.OptionalInt;
  */
 public class ProblemFileCreatorTask extends DefaultTask {
 
-    private final TextIO textIO;
     private final CompetitiveProgrammingExtension extension;
     private final Project project;
     private final VelocityContext context;
@@ -41,7 +41,6 @@ public class ProblemFileCreatorTask extends DefaultTask {
         super();
         setGroup(Constants.PLUGIN_TASK_GROUP);
         setDescription("Generate Problem Java Files");
-        textIO = TextIoFactory.getTextIO();
         project = getProject();
         extension = getProject().getExtensions().findByType(CompetitiveProgrammingExtension.class);
         Utility.validatedExtension(extension);
@@ -72,30 +71,45 @@ public class ProblemFileCreatorTask extends DefaultTask {
 
     @TaskAction
     public void taskAction() throws IOException {
-        try {
             this.prepareAction();
-            Platform platform = this.textIO.newEnumInputReader(Platform.class).read("Select problem platform");
-            switch (platform) {
-                case LEETCODE:
-                    leetcodeProblemGenerator();
-                    break;
-                case CODECHEF:
-                    codechefProblemGenerator();
-                default:
-                    project.getLogger().error("Platform not supported");
-                    throw new RuntimeException("Platform not supported");
+            Scanner scanner = new Scanner(System.in);
+            Platform platform = takePlatformInput(scanner);
+            if (platform != null) {
+                switch (platform) {
+                    case LEETCODE:
+                        leetcodeProblemGenerator(scanner);
+                        break;
+                    case CODECHEF:
+                        codechefProblemGenerator();
+                    default:
+                        project.getLogger().error("Platform not supported");
+                        throw new RuntimeException("Platform not supported");
+                }
+            }
+            throw new RuntimeException("Platform not supported");
+    }
+
+    private Platform takePlatformInput(Scanner scanner) {
+        StringBuilder optionsBuilder = new StringBuilder("Select problem platform").append("\n");
+        for (Platform value: Platform.values()) {
+            optionsBuilder.append(value.ordinal()).append(" ").append(value).append("\n");
+        }
+        System.out.println(optionsBuilder);
+        int platformInput = scanner.nextInt();
+        for (Platform value: Platform.values()) {
+            if (value.ordinal() == platformInput) {
+                return value;
             }
         }
-        finally {
-            this.textIO.dispose();
-        }
+        return null;
     }
 
     private void codechefProblemGenerator() {
     }
 
-    private void leetcodeProblemGenerator() throws IOException {
-        String link = this.textIO.newStringInputReader().read("Enter problem link");
+    private void leetcodeProblemGenerator(Scanner scanner) throws IOException {
+        System.out.println("Enter Problem Link:");
+        String link = scanner.nextLine();
         String problemName = parseLeetcodeFileName(link);
         if (Character.isDigit(problemName.charAt(0))) {
             problemName = "Problem" + problemName;
