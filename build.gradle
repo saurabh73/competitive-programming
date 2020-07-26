@@ -40,20 +40,20 @@ dependencies {
 gradlePlugin {
     // Define the plugin
     plugins {
-        initProblem {
-            id = 'competitive.programming'
+        create("CompetitiveProgrammingPlugin") {
+            id = 'com.github.saurabh73.competitive-programming-gradle-plugin'
             implementationClass = 'competitive.programming.gradle.plugin.CompetitiveProgrammingPlugin'
         }
     }
 }
 
-publishing {
-    repositories {
-        mavenLocal()
-    }
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-}
+// publishing {
+//     repositories {
+//         mavenLocal()
+//     }
+//     publications {
+//         mavenJava(MavenPublication) {
+//             from components.java
+//         }
+//     }
+// }
