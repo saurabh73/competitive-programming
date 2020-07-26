@@ -79,10 +79,12 @@ public class ProblemFileCreatorTask extends DefaultTask {
         if (platform != null) {
             switch (platform) {
                 case LEETCODE:
-                    leetcodeProblemGenerator(scanner);
+                case HACKEREARTH:
+                    problemGenerator(scanner, platform);
                     break;
                 case CODECHEF:
                     codechefProblemGenerator();
+                    break;
                 default:
                     project.getLogger().error("Platform not supported");
                     throw new RuntimeException("Platform not supported");
@@ -112,22 +114,23 @@ public class ProblemFileCreatorTask extends DefaultTask {
     private void codechefProblemGenerator() {
     }
 
-    private void leetcodeProblemGenerator(Scanner scanner) throws IOException {
+
+    private void problemGenerator(Scanner scanner, Platform platform) throws IOException {
         System.out.println("Enter Problem Link:");
         String link = scanner.next();
-        String problemName = parseLeetcodeFileName(link);
+        URL problemUrl = new URL(link);
+        if (!problemUrl.getHost().equals(platform.toString())) {
+            throw new MalformedURLException("Domain not " + platform.toString());
+        }
+        String problemName = parseFileNameFromLink(problemUrl, platform.name().toLowerCase()+"Problem");
         if (Character.isDigit(problemName.charAt(0))) {
             problemName = "Problem" + problemName;
         }
-        generateProblemFile(Platform.LEETCODE, problemName, link);
+        generateProblemFile(platform, problemName, link);
     }
 
 
-    private String parseLeetcodeFileName(String link) throws MalformedURLException {
-        URL problemUrl = new URL(link);
-        if (!problemUrl.getHost().equals("leetcode.com")) {
-            throw new MalformedURLException("Domain not Leetcode");
-        }
+    private String parseFileNameFromLink(URL problemUrl, String defaultName) throws MalformedURLException {
         String[] path = problemUrl.getPath().split("/");
         ArrayUtils.reverse(path);
         for (String pathSegment: path) {
@@ -135,7 +138,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
                 return CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, pathSegment.toLowerCase());
             }
         }
-        return "LeetcodeProblem";
+        return defaultName;
     }
 
     private void generateProblemFile(Platform platform, String name, String link) throws IOException {
