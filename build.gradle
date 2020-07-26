@@ -41,7 +41,7 @@ gradlePlugin {
     // Define the plugin
     plugins {
         create("CompetitiveProgrammingPlugin") {
-            id = 'com.github.saurabh73.competitive-programming-gradle-plugin'
+            id = 'competitive-programming-gradle-plugin'
             implementationClass = 'competitive.programming.gradle.plugin.CompetitiveProgrammingPlugin'
         }
     }
