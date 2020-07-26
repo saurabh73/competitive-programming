@@ -13,4 +13,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'competitive-programming-gradle-plugin'
+rootProject.name = 'competitive-programming'
