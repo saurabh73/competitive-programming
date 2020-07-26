@@ -4,8 +4,12 @@ plugins {
     id 'java-gradle-plugin'
 }
 
-group 'com.github.saurabh73'
-version '1.0.0'
+allprojects {
+    group 'com.github.saurabh73'
+    version '1.0.0'
+}
+
+
 
 repositories {
     maven { url 'https://jitpack.io' }

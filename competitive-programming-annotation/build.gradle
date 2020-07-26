@@ -12,9 +12,6 @@ plugins {
     id 'java-library'
 }
 
-group 'com.github.saurabh73'
-version '1.0.0'
-// name 'competitive-programming-annotation'
 
 buildDir = new File(rootProject.projectDir, "build/")
 
