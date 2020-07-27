@@ -122,4 +122,4 @@ class Solution {
 - Solution file is generated in `output` folder.
 
 ### Download Example
-[competitive-programming-example.zip](https://res.cloudinary.com/dren4jgbp/raw/upload/v1595816744/competitive-programming-example_xxlrja.zip)
+[competitive-programming-example.zip](https://res.cloudinary.com/dren4jgbp/raw/upload/v1595816744/competitive-programming-example.zip)
