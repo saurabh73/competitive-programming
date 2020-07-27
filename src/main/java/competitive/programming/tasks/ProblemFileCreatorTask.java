@@ -80,10 +80,11 @@ public class ProblemFileCreatorTask extends DefaultTask {
             switch (platform) {
                 case LEETCODE:
                 case HACKEREARTH:
-                    problemGenerator(scanner, platform);
+                case HACKERRANK:
+                    commonProblemGenerator(scanner, platform);
                     break;
                 case CODECHEF:
-                    codechefProblemGenerator();
+                    codechefProblemGenerator(scanner, platform);
                     break;
                 default:
                     project.getLogger().error("Platform not supported");
@@ -102,7 +103,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
             optionsBuilder.append(value.ordinal() + 1).append(" ").append(value).append("\n");
         }
         System.out.println(optionsBuilder.toString().trim());
-        int platformInput = scanner.nextInt();
+        int platformInput = Integer.parseInt(scanner.nextLine());
         for (Platform value : Platform.values()) {
             if ((value.ordinal() + 1) == platformInput) {
                 return value;
@@ -111,32 +112,49 @@ public class ProblemFileCreatorTask extends DefaultTask {
         return null;
     }
 
-    private void codechefProblemGenerator() {
+    private void codechefProblemGenerator(Scanner scanner, Platform platform) throws IOException {
+        URL problemUrl = takeLinkInput(scanner, platform);
+        System.out.println("Enter Problem Name:");
+        String problemName = scanner.nextLine();
+        problemName = takeProblemNameInput(problemName);
+        generateProblemFile(platform, problemName, problemUrl.toString());
     }
 
-
-    private void problemGenerator(Scanner scanner, Platform platform) throws IOException {
-        System.out.println("Enter Problem Link:");
-        String link = scanner.next();
-        URL problemUrl = new URL(link);
-        System.out.println(problemUrl.getHost());
-        if (!problemUrl.getHost().endsWith(platform.toString())) {
-            throw new MalformedURLException("Domain not " + platform.toString());
-        }
-        String problemName = parseFileNameFromLink(problemUrl, platform.name().toLowerCase()+"Problem");
+    private String takeProblemNameInput(String problemName) {
+        problemName = problemName.toLowerCase().replaceAll("[^a-zA-Z0-9 ]", " ").replaceAll("[ ]+", "_");
+        System.out.println(problemName);
+        problemName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, problemName);
         if (Character.isDigit(problemName.charAt(0))) {
             problemName = "Problem" + problemName;
         }
-        generateProblemFile(platform, problemName, link);
+        return problemName;
+    }
+
+    private URL takeLinkInput(Scanner scanner, Platform platform) throws IOException {
+        System.out.println("Enter Problem Link:");
+        String link = scanner.nextLine();
+        URL problemUrl = new URL(link);
+        if (!problemUrl.getHost().endsWith(platform.toString())) {
+            throw new MalformedURLException("Domain not " + platform.toString());
+        }
+        return problemUrl;
     }
 
 
-    private String parseFileNameFromLink(URL problemUrl, String defaultName) throws MalformedURLException {
+    private void commonProblemGenerator(Scanner scanner, Platform platform) throws IOException {
+        URL problemUrl = takeLinkInput(scanner, platform);
+        String problemName = parseFileNameFromLink(problemUrl, platform.name().toLowerCase()+" problem");
+        problemName = takeProblemNameInput(problemName);
+        generateProblemFile(platform, problemName, problemUrl.toString());
+    }
+
+
+    private String parseFileNameFromLink(URL problemUrl, String defaultName) {
         String[] path = problemUrl.getPath().split("/");
         ArrayUtils.reverse(path);
         for (String pathSegment: path) {
-            if (!pathSegment.matches("[\\d]+")) {
-                return CaseFormat.LOWER_HYPHEN.to(CaseFormat.UPPER_CAMEL, pathSegment.toLowerCase());
+            if (!pathSegment.matches("[\\d]+") && !pathSegment.equalsIgnoreCase("problem")) {
+                return pathSegment.toLowerCase();
             }
         }
         return defaultName;

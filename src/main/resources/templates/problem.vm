@@ -1,15 +1,15 @@
 package ${basePackage}.${platform}.problem${serial_no};
-import  ${basePackage}.base.ISolution;
+import ${basePackage}.base.ISolution;
 import java.io.InputStream;
 
 /**
 *
-* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end ${NEWLINE}*
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end${NEWLINE}*
 * #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end ${NEWLINE}*
 **/
 public class ${name} implements ISolution {
     @Override
-    public void solve(InputStream in) throws IOException {
+    public void solve(InputStream in) throws Exception {
         //TODO: Implement Solution
     }
 }
