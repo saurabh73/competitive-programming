@@ -119,7 +119,8 @@ public class ProblemFileCreatorTask extends DefaultTask {
         System.out.println("Enter Problem Link:");
         String link = scanner.next();
         URL problemUrl = new URL(link);
-        if (!problemUrl.getHost().equals(platform.toString())) {
+        System.out.println(problemUrl.getHost());
+        if (!problemUrl.getHost().endsWith(platform.toString())) {
             throw new MalformedURLException("Domain not " + platform.toString());
         }
         String problemName = parseFileNameFromLink(problemUrl, platform.name().toLowerCase()+"Problem");
