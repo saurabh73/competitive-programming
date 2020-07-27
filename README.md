@@ -120,3 +120,6 @@ class Solution {
 - Problem files is generated in `coding-problems/src/main/java` folder categorized by platforms.
 - Default Test input file will be in `src/main/resources/input` folder.
 - Solution file is generated in `output` folder.
+
+### Download Example
+[competitive-programming-example.zip](https://res.cloudinary.com/dren4jgbp/raw/upload/v1595816744/competitive-programming-example_xxlrja.zip)
