@@ -1,0 +1,9 @@
+pluginManagement {
+    repositories {
+        // maven { url 'https://jitpack.io' }
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'competitive-programming-practice'
