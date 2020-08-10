@@ -1,9 +1,9 @@
 package competitive.programming.utils;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import competitive.programming.models.ProblemInput;
 import lombok.Getter;
-import org.gradle.internal.impldep.com.fasterxml.jackson.databind.DeserializationFeature;
-import org.gradle.internal.impldep.com.fasterxml.jackson.databind.ObjectMapper;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
@@ -20,7 +20,6 @@ public class TakeProblemInput implements Take {
         System.out.println("Request Received");
         try {
             final String body = new RqPrint(req).printBody();
-            System.out.println(body);
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             this.problemInput = mapper.readValue(body, ProblemInput.class);
