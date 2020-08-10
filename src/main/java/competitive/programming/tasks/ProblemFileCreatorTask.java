@@ -3,6 +3,7 @@ package competitive.programming.tasks;
 import com.google.common.base.CaseFormat;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.models.Platform;
+import competitive.programming.models.ProblemInput;
 import competitive.programming.utils.Constants;
 import competitive.programming.utils.OneMinuteExit;
 import competitive.programming.utils.TakeProblemInput;
@@ -84,16 +85,25 @@ public class ProblemFileCreatorTask extends DefaultTask {
         this.prepareAction();
         Scanner scanner = new Scanner(System.in);
         Platform platform = takePlatformInput(scanner);
-
         if (platform != null) {
-            if (extension.isUseCompetitiveCompanionPlugin() && !platform.equals(Platform.LEETCODE)) {
+            boolean manualMode = !(extension.isUseCompetitiveCompanionPlugin() && !platform.equals(Platform.LEETCODE));
+            if (!manualMode) {
                 int port = extension.getPort();
+                System.out.println("Competitive Plugin Enabled. Click on Parse Task Button");
                 TakeProblemInput pluginInput = new TakeProblemInput();
                 FkRegex pathMethod = new FkRegex("/",new TkFork(new FkMethods("POST", pluginInput)));
                 FtBasic post = new FtBasic(new TkFork(pathMethod), port);
                 post.start(new Exit.Or(new OneMinuteExit(System.currentTimeMillis()), () -> pluginInput.getProblemInput() != null));
+                ProblemInput parsedInput = pluginInput.getProblemInput();
+                if (parsedInput != null) {
+                    generateProblemFile(platform, parsedInput.getLanguages().getJava().getTaskClass(), parsedInput.getUrl());
+                } else {
+                    System.out.println("Parse Task Timeout. Switching to manual mode");
+                    manualMode = true;
+                }
             }
-            else {
+
+            if (manualMode) {
                 switch (platform) {
                     case LEETCODE:
                     case HACKEREARTH:
@@ -108,7 +118,6 @@ public class ProblemFileCreatorTask extends DefaultTask {
                         throw new RuntimeException("Platform not supported");
                 }
             }
-
         }
         else {
             throw new RuntimeException("Invalid options selected");

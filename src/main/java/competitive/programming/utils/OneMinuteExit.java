@@ -12,7 +12,6 @@ public class OneMinuteExit implements Exit {
     @Override
     public boolean ready() {
         long endTime = System.currentTimeMillis();
-        System.out.println("Calculating timeout " + ((endTime - startTime) / 1000) + "s");
         return ((endTime - startTime) >= 60000);
     }
 }

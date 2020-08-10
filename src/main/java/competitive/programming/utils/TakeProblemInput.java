@@ -16,19 +16,11 @@ public class TakeProblemInput implements Take {
     private ProblemInput problemInput;
 
     @Override
-    public Response act(final Request req) {
-        System.out.println("Request Received");
-        try {
-            final String body = new RqPrint(req).printBody();
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            this.problemInput = mapper.readValue(body, ProblemInput.class);
-            System.out.println(mapper.writeValueAsString(this.problemInput));
-        }
-        catch (Exception ex) {
-            System.out.println("Error Happened");
-            ex.printStackTrace();
-        }
+    public Response act(final Request req) throws Exception {
+        final String body = new RqPrint(req).printBody();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.problemInput = mapper.readValue(body, ProblemInput.class);
         return new RsEmpty();
     }
 }
