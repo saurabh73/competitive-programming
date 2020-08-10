@@ -16,6 +16,7 @@ public class TakeProblemInput implements Take {
 
     @Override
     public Response act(Request req) throws Exception {
+        System.out.println("Request Received");
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.problemInput = mapper.readValue(req.body(), ProblemInput.class);
