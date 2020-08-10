@@ -20,8 +20,8 @@ public class TakeProblemInput implements Take {
         System.out.println("Request Received");
         try {
             final String body = new RqPrint(req).printBody();
-            ObjectMapper mapper = new ObjectMapper();
             System.out.println(body);
+            ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             this.problemInput = mapper.readValue(body, ProblemInput.class);
             System.out.println(mapper.writeValueAsString(this.problemInput));
