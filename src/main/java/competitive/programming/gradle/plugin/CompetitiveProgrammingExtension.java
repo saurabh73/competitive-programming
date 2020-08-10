@@ -12,4 +12,6 @@ public class CompetitiveProgrammingExtension {
     private String githubUsername;
     private String baseOutputPath = "output";
     private String baseSourcePath = "src/main/java";
+    private int port = 7373;
+    private boolean useCompetitiveCompanionPlugin = false;
 }

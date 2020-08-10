@@ -4,6 +4,8 @@ import com.google.common.base.CaseFormat;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.models.Platform;
 import competitive.programming.utils.Constants;
+import competitive.programming.utils.OneMinuteExit;
+import competitive.programming.utils.TakeProblemInput;
 import competitive.programming.utils.Utility;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -14,9 +16,16 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskAction;
+import org.takes.Response;
+import org.takes.facets.fork.FkMethods;
+import org.takes.facets.fork.FkRegex;
+import org.takes.facets.fork.TkFork;
+import org.takes.http.Exit;
+import org.takes.http.FtBasic;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -74,22 +83,32 @@ public class ProblemFileCreatorTask extends DefaultTask {
     public void taskAction() throws IOException {
         this.prepareAction();
         Scanner scanner = new Scanner(System.in);
-
         Platform platform = takePlatformInput(scanner);
+
         if (platform != null) {
-            switch (platform) {
-                case LEETCODE:
-                case HACKEREARTH:
-                case HACKERRANK:
-                    commonProblemGenerator(scanner, platform);
-                    break;
-                case CODECHEF:
-                    codechefProblemGenerator(scanner, platform);
-                    break;
-                default:
-                    project.getLogger().error("Platform not supported");
-                    throw new RuntimeException("Platform not supported");
+            if (extension.isUseCompetitiveCompanionPlugin() && !platform.equals(Platform.LEETCODE)) {
+                int port = extension.getPort();
+                TakeProblemInput pluginInput = new TakeProblemInput();
+                FkRegex pathMethod = new FkRegex("/",new TkFork(new FkMethods("POST", pluginInput)));
+                FtBasic post = new FtBasic(new TkFork(pathMethod), port);
+                post.start(new Exit.Or(new OneMinuteExit(System.currentTimeMillis()), () -> pluginInput.getProblemInput() != null));
             }
+            else {
+                switch (platform) {
+                    case LEETCODE:
+                    case HACKEREARTH:
+                    case HACKERRANK:
+                        commonProblemGenerator(scanner, platform);
+                        break;
+                    case CODECHEF:
+                        codechefProblemGenerator(scanner, platform);
+                        break;
+                    default:
+                        project.getLogger().error("Platform not supported");
+                        throw new RuntimeException("Platform not supported");
+                }
+            }
+
         }
         else {
             throw new RuntimeException("Invalid options selected");
@@ -143,7 +162,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
 
     private void commonProblemGenerator(Scanner scanner, Platform platform) throws IOException {
         URL problemUrl = takeLinkInput(scanner, platform);
-        String problemName = parseFileNameFromLink(problemUrl, platform.name().toLowerCase()+" problem");
+        String problemName = parseFileNameFromLink(problemUrl, platform.name().toLowerCase() + " problem");
         problemName = takeProblemNameInput(problemName);
         generateProblemFile(platform, problemName, problemUrl.toString());
     }
@@ -152,7 +171,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
     private String parseFileNameFromLink(URL problemUrl, String defaultName) {
         String[] path = problemUrl.getPath().split("/");
         ArrayUtils.reverse(path);
-        for (String pathSegment: path) {
+        for (String pathSegment : path) {
             if (!pathSegment.matches("[\\d]+") && !pathSegment.equalsIgnoreCase("problem")) {
                 return pathSegment.toLowerCase();
             }
