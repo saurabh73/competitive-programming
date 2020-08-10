@@ -9,18 +9,32 @@ import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsEmpty;
 
+import java.util.Scanner;
+
 public class TakeProblemInput implements Take {
 
     @Getter
     private ProblemInput problemInput;
 
     @Override
-    public Response act(Request req) throws Exception {
+    public Response act(Request req) {
         System.out.println("Request Received");
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        this.problemInput = mapper.readValue(req.body(), ProblemInput.class);
-        System.out.println(mapper.writeValueAsString(this.problemInput));
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Scanner scanner = new Scanner(req.body());
+            StringBuilder body = new StringBuilder();
+            while (scanner.hasNext()) {
+                body.append(scanner.next());
+            }
+            System.out.println(body.toString());
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            this.problemInput = mapper.readValue(body.toString(), ProblemInput.class);
+            System.out.println(mapper.writeValueAsString(this.problemInput));
+        }
+        catch (Exception ex) {
+            System.out.println("Error Happened");
+            ex.printStackTrace();
+        }
         return new RsEmpty();
     }
 }
