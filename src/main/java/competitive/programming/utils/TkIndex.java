@@ -27,9 +27,9 @@ public class TkIndex  implements Take {
 
     private File getIndexFileFromResource() throws URISyntaxException, FileNotFoundException {
         ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("/public/index.html");
+        URL resource = classLoader.getResource("public/index.html");
         if (resource == null) {
-            throw new FileNotFoundException("file not found! /public/index.html");
+            throw new FileNotFoundException("file not found! public/index.html");
         } else {
             return new File(resource.toURI());
         }
