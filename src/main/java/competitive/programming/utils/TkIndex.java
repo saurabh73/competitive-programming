@@ -1,37 +1,29 @@
 package competitive.programming.utils;
 
-import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.takes.Request;
 import org.takes.Response;
 import org.takes.Take;
 import org.takes.rs.RsHtml;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
-import static org.apache.commons.io.Charsets.UTF_8;
-
-public class TkIndex  implements Take {
+public class TkIndex implements Take {
     @Override
-    public  Response act(Request req) throws Exception {
-        try {
-            return new RsHtml(FileUtils.readFileToString(getIndexFileFromResource(), UTF_8));
-        } catch (FileNotFoundException fileNotFoundException) {
-            System.out.println(fileNotFoundException.getMessage());
-            return new RsHtml("<h1 style=\"color:red\">Hello World</h1>");
-        }
-
+    public Response act(Request req) throws Exception {
+        return new RsHtml(readIndexFileFromResource());
     }
 
-    private File getIndexFileFromResource() throws URISyntaxException, FileNotFoundException {
+    private String readIndexFileFromResource() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
-        URL resource = classLoader.getResource("public/index.html");
-        if (resource == null) {
+        InputStream in = classLoader.getResourceAsStream("public/index.html");
+        if (in == null) {
             throw new FileNotFoundException("file not found! public/index.html");
         } else {
-            return new File(resource.toURI());
+            return IOUtils.toString(in, Charset.defaultCharset());
         }
     }
 }
