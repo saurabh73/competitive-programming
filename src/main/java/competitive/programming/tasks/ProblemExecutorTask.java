@@ -3,7 +3,6 @@ package competitive.programming.tasks;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.utils.Constants;
 import competitive.programming.utils.Utility;
-import org.apache.commons.lang3.StringUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskAction;
@@ -45,7 +44,6 @@ public class ProblemExecutorTask extends DefaultTask {
     public void taskAction() throws Exception {
         // take input
         Map<String, String> inputMap = takeUserInput();
-
         String inputClassName = inputMap.get("INPUT_CLASS");
         String testInputFileName = inputMap.get("INPUT_FILE");
         // process input
@@ -60,13 +58,11 @@ public class ProblemExecutorTask extends DefaultTask {
 
     public Map<String, String> takeUserInput() {
         Map<String, String> inputMap = new HashMap<>();
-
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter full class name to execute");
         inputMap.put("INPUT_CLASS", scanner.nextLine());
-        System.out.println("Test input file [default: input.txt]");
+        System.out.println("Test input file");
         String testInputFileName = scanner.nextLine();
-        testInputFileName = StringUtils.isEmpty(testInputFileName) ? "input.txt" : testInputFileName;
         inputMap.put("INPUT_FILE", testInputFileName);
         return inputMap;
     }

@@ -1,0 +1,49 @@
+package ${basePackage}.platform.${platform}.problem${serial_no};
+import ${basePackage}.base.ISolution;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.nio.charset.Charset;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class ${name}Test {
+
+    private ByteArrayOutputStream buffer;
+    private String testFilePath;
+
+    @BeforeEach
+    void setup() {
+        buffer = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(buffer));
+    }
+
+    #foreach($i in [1..$end])
+    @Test
+    void testSolveInput${i}() throws Exception {
+        // Input
+        InputStream inputStream = this.getClass().getResourceAsStream( "/${platform}/problem${serial_no}/input${i}.txt");
+        // Output
+        InputStream outPutStream = this.getClass().getResourceAsStream( "/${platform}/problem${serial_no}/output${i}.txt");
+        // Call Method Under Test
+        ISolution problem = new ${name}();
+        problem.solve(inputStream);
+        //Assertion
+        String actual = buffer.toString().trim();
+        String expected =  IOUtils.toString(outPutStream, Charset.defaultCharset());
+        assertEquals(expected, actual);
+    }
+    #end
+
+
+    @AfterEach
+    void cleanup() {
+        buffer.reset();
+    }
+}
