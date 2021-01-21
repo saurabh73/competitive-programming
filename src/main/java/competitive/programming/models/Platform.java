@@ -13,6 +13,7 @@ public enum Platform {
     HACKEREARTH("hackerearth.com"),
     CODECHEF("codechef.com"),
     HACKERRANK("hackerrank.com"),
+    INTERVIEWBIT("interviewbit.com"),
     DEFAULT(null);
 
     @Getter

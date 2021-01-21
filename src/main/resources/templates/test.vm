@@ -12,7 +12,11 @@ import java.io.PrintStream;
 import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/**
+* Test for ${name}.java
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end
+* #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end
+**/
 public class ${name}Test {
 
     private ByteArrayOutputStream buffer;
@@ -24,7 +28,7 @@ public class ${name}Test {
         System.setOut(new PrintStream(buffer));
     }
 
-    #foreach($i in [1..$end])
+    #foreach($i in [1..$size])
     @Test
     void testSolveInput${i}() throws Exception {
         // Input

@@ -64,8 +64,20 @@ public class Utility {
         return Paths.get(projectDir, baseSourcePath, basePackagePath).toFile().getAbsolutePath();
     }
 
+    public static String getBaseTestPath(Project project, CompetitiveProgrammingExtension extension) {
+        String projectDir = project.getProjectDir().getAbsolutePath();
+        String baseTestPath = extension.getBaseTestPath();
+        String basePackagePath = extension.getBasePackage().replaceAll("\\.", File.separator);
+        return Paths.get(projectDir, baseTestPath, basePackagePath).toFile().getAbsolutePath();
+    }
+
     public static String toAbsolutePath(Path path) {
         return path.toFile().getAbsolutePath();
+    }
+
+    public static String getPlatform(URL problemUrl) {
+        String host = problemUrl.getHost();
+        return host.split("\\.")[0].toLowerCase();
     }
 
     public static void ignoringExc(RunnableExc r) {

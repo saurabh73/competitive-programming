@@ -318,7 +318,7 @@ public class ProblemBuildTask extends DefaultTask {
         context.put("importPath", className);
         context.put("className", Utility.getClassName(className));
         // Determine File name
-        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATES_SOLUTION, this.outputFile, context);
+        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_SOLUTION, this.outputFile, context);
         return this.outputFile.getAbsolutePath();
     }
 

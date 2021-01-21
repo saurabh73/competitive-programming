@@ -3,9 +3,8 @@ import ${basePackage}.base.ISolution;
 import java.io.InputStream;
 
 /**
-*
-* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end${NEWLINE}*
-* #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end ${NEWLINE}*
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end
+* #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end
 **/
 public class ${name} implements ISolution {
     @Override
