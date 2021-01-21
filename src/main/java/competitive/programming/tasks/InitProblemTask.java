@@ -120,7 +120,7 @@ public class InitProblemTask extends DefaultTask {
         context.put(Constants.SIZE, size);
 
         // Generate Test File
-        Path targetFilePath = Paths.get(Utility.getBaseTestPath(project, extension), platform);
+        Path targetFilePath = Paths.get(Utility.getBaseTestPath(project, extension), "platform", platform);
         File testFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
         Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_TEST, testFile, context);
     }
