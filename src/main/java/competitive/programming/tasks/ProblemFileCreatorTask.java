@@ -3,7 +3,6 @@ package competitive.programming.tasks;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.models.ProblemInput;
 import competitive.programming.utils.Constants;
-import competitive.programming.utils.OneMinuteExit;
 import competitive.programming.utils.TakeProblemInput;
 import competitive.programming.utils.TkIndex;
 import competitive.programming.utils.Utility;
@@ -73,15 +72,19 @@ public class ProblemFileCreatorTask extends DefaultTask {
     public void taskAction() throws IOException {
         this.prepareAction();
         int port = extension.getPort();
-        System.out.println("Competitive Plugin Enabled. Click on Parse Task Button");
+        System.out.println("Competitive Plugin Enabled. " +
+                "\nClick on Parse Task Button or input with http://localhost:7373");
         TakeProblemInput pluginInput = new TakeProblemInput();
         FkRegex pathMethod = new FkRegex("/", new TkFork(
                 new FkMethods("POST", pluginInput),
                 new FkMethods("GET", new TkIndex())
         ));
         FtBasic post = new FtBasic(new TkFork(pathMethod), port);
-        post.start(new Exit.Or(new OneMinuteExit(System.currentTimeMillis()), () -> pluginInput.getProblemInput() != null));
+        post.start(new Exit.Not(() -> pluginInput.getProblemInput() != null));
         ProblemInput parsedInput = pluginInput.getProblemInput();
+
+        System.out.println(parsedInput.getName());
+        System.out.println(parsedInput.getLanguages().getJava().getTaskClass());
 
 //        Scanner scanner = new Scanner(System.in);
 //        URL problemUrl = takeLinkInput(scanner);

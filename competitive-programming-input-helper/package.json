@@ -1,0 +1,38 @@
+{
+  "title": "Competitive Programming Gradle Plugin: Input Form",
+  "name": "competitive-programming-gradle-plugin-input-form",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node_modules/.bin/gulp",
+    "copy": "node_modules/.bin/gulp copy"
+  },
+  "keywords": [
+    "css",
+    "sass",
+    "html",
+    "responsive",
+    "theme",
+    "template"
+  ],
+  "license": "MIT",
+  "author": "Saurabh Dutta (https://saurabhdutta.dev)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saurabh73/competitive-programming"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-html-inline": "^1.0.4",
+    "del": "6.0.0",
+    "gulp": "4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean": "^0.4.0",
+    "gulp-copy": "^4.0.1",
+    "gulp-htmlmin": "^5.0.1",
+    "gulp-inline": "^0.1.3",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-uglify": "^3.0.2",
+    "gulp-url-replace": "^1.0.2"
+  }
+}
