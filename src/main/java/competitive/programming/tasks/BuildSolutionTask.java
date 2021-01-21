@@ -48,7 +48,7 @@ import java.util.regex.Pattern;
  * @author Saurabh Dutta <saurabh73>
  * Task method for buildProblem Gradle task
  */
-public class ProblemBuildTask extends DefaultTask {
+public class BuildSolutionTask extends DefaultTask {
 
     private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String PATH_SEPARATOR = File.separator.equalsIgnoreCase("\\") ? "\\" : "/";
@@ -64,7 +64,7 @@ public class ProblemBuildTask extends DefaultTask {
     private final Map<String, ClassCode> innerClasses = new LinkedHashMap<>();
 
 
-    public ProblemBuildTask() {
+    public BuildSolutionTask() {
         super();
         setGroup(Constants.PLUGIN_TASK_GROUP);
         setDescription("Build consolidated solution file");

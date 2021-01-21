@@ -32,13 +32,13 @@ import java.util.OptionalInt;
  * @author Saurabh Dutta <saurabh73>
  * Task method for initProblem Gradle task
  */
-public class ProblemFileCreatorTask extends DefaultTask {
+public class InitProblemTask extends DefaultTask {
 
     private final CompetitiveProgrammingExtension extension;
     private final Project project;
     private final VelocityContext context;
 
-    public ProblemFileCreatorTask() {
+    public InitProblemTask() {
         super();
         setGroup(Constants.PLUGIN_TASK_GROUP);
         setDescription("Generate Problem Java Files");
