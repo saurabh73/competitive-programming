@@ -119,7 +119,7 @@ public class InitProblemTask extends DefaultTask {
         Path baseTargetTestResourceFile = Paths.get(projectDir, baseTestResourcePath, platform, "problem" + serialNo);
         boolean resourceExists = baseTargetTestResourceFile.toFile().exists();
         if (!resourceExists) {
-            resourceExists = baseTargetTestResourceFile.toFile().createNewFile();
+            resourceExists = baseTargetTestResourceFile.toFile().mkdirs();
         }
         if (!resourceExists) {
             throw new IOException("Cannot create path: " + baseTargetTestResourceFile.toUri());
