@@ -22,6 +22,7 @@ import org.takes.http.FtBasic;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -75,8 +76,7 @@ public class InitProblemTask extends DefaultTask {
     public void taskAction() throws IOException {
         this.prepareAction();
         // Start Server
-        project.getLogger().debug("Competitive Plugin Enabled.\nClick on Parse Task Button or input with http://localhost:{}", Constants.PORT);
-
+        System.out.printf("Competitive Plugin Enabled.\nClick on Parse Task Button or input with http://localhost:%d\n", Constants.PORT);
         TakeProblemInput pluginInput = new TakeProblemInput();
         FkRegex pathMethod = new FkRegex("/", new TkFork(
                 new FkMethods("POST", pluginInput),
@@ -87,40 +87,42 @@ public class InitProblemTask extends DefaultTask {
 
         // Take I
         ProblemInput parsedInput = pluginInput.getProblemInput();
-        String platform = Utility.getPlatform(parsedInput.getUrl());
+        URL link = parsedInput.getUrl();
+        String platform = Utility.getPlatform(link);
 
-        String serialNo = generateProblemFile(platform, parsedInput.getLanguages().getJava().getTaskClass(), parsedInput.getUrl().toString());
-        generateTestFile(platform, parsedInput.getLanguages().getJava().getTaskClass(), serialNo, parsedInput.getTests().size());
-    }
-
-    private String generateProblemFile(String platform, String name, String link) throws IOException {
-        String baseFileName = name + Constants.JAVA_EXTENSION;
         Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), platform);
         String serialNo = getProblemSerialNumber(targetFilePath.toFile());
 
+        // Update Context
         context.put(Constants.PLATFORM, platform);
-        context.put(Constants.NAME, name);
-        context.put(Constants.LINK, link);
+        context.put(Constants.LINK, link.toString());
         context.put(Constants.SERIAL_NO, serialNo);
 
-        // Determine File name
+        // Generate Files
+        generateProblemFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass());
+        generateTestFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass(), parsedInput.getTests().size());
+    }
+
+    private void generateProblemFile(String platform,  String serialNo, String name) throws IOException {
+        String baseFileName = name + Constants.JAVA_EXTENSION;
+        context.put(Constants.NAME, name);
+
+        // Generate Problem File
+        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), platform);
         File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
         Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_PROBLEM, problemFile, context);
-        return serialNo;
     }
 
 
-    private void generateTestFile(String platform, String name, String serialNo, int size) throws IOException {
+    private void generateTestFile(String platform, String serialNo, String name, int size) throws IOException {
         String baseFileName = name + "Test"+ Constants.JAVA_EXTENSION;
-        Path targetFilePath = Paths.get(Utility.getBaseTestPath(project, extension), platform);
-
-        context.put(Constants.PLATFORM, platform);
         context.put(Constants.NAME, name);
-        context.put(Constants.SERIAL_NO, serialNo);
         context.put(Constants.SIZE, size);
-        // Determine File name
-        File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
-        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_TEST, problemFile, context);
+
+        // Generate Test File
+        Path targetFilePath = Paths.get(Utility.getBaseTestPath(project, extension), platform);
+        File testFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
+        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_TEST, testFile, context);
     }
 
     private String getProblemSerialNumber(File file) {

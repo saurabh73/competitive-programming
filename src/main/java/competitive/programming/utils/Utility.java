@@ -1,5 +1,6 @@
 package competitive.programming.utils;
 
+import com.google.common.net.InternetDomainName;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.models.RunnableExc;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +25,7 @@ import java.util.Properties;
  * Utility Class
  */
 public class Utility {
+
     public static void validatedExtension(CompetitiveProgrammingExtension extension) {
         if (extension == null) {
             throw new IllegalStateException("Gradle Plugin not initialized");
@@ -75,9 +77,14 @@ public class Utility {
         return path.toFile().getAbsolutePath();
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public static String getPlatform(URL problemUrl) {
         String host = problemUrl.getHost();
-        return host.split("\\.")[0].toLowerCase();
+        try {
+            return InternetDomainName.from(host).topPrivateDomain().toString().split("\\.")[0];
+        } catch (Exception ex) {
+            return  "misc";
+        }
     }
 
     public static void ignoringExc(RunnableExc r) {

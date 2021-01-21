@@ -13,9 +13,10 @@ import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
-* Test for ${name}.java
-* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end
-* #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end
+*
+* Test for ${name}.java ${NEWLINE}*
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))<${githubUsername}>#end ${NEWLINE}*
+* #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end ${NEWLINE}*
 **/
 public class ${name}Test {
 

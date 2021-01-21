@@ -27,7 +27,7 @@ dependencies {
     // utility libraries
     implementation group: 'org.jooq', name: 'joor-java-8', version: '0.9.13'
     implementation group: 'com.google.googlejavaformat', name: 'google-java-format', version: '1.7'
-    implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '30.1-jre'
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
     implementation group: 'org.apache.velocity', name: 'velocity', version: '1.7'
