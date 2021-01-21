@@ -23,6 +23,8 @@ import org.takes.http.FtBasic;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -98,24 +100,37 @@ public class InitProblemTask extends DefaultTask {
         context.put(Constants.LINK, link.toString());
         context.put(Constants.SERIAL_NO, serialNo);
 
-        // Generate Files
+        // Generate Problem
         generateProblemFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass());
+
+        // Generate Test Files
+        String projectDir = project.getProjectDir().getAbsolutePath();
+        String baseTestResourcePath = extension.getBaseTestResourcePath();
+        Path baseTargetTestResourceFile = Paths.get(projectDir, baseTestResourcePath, platform, "problem" + serialNo);
+        for (int i = 0; i < parsedInput.getTests().size(); i++) {
+            generateTestResource(baseTargetTestResourceFile, "input", i + 1, parsedInput.getTests().get(i).getInput());
+            generateTestResource(baseTargetTestResourceFile, "output", i + 1, parsedInput.getTests().get(i).getOutput());
+        }
         generateTestFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass(), parsedInput.getTests().size());
     }
 
-    private void generateProblemFile(String platform,  String serialNo, String name) throws IOException {
+    private void generateTestResource(Path baseTargetTestFile, String fileBaseName, int index, String data) throws IOException {
+        Files.write(Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index), data.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void generateProblemFile(String platform, String serialNo, String name) throws IOException {
         String baseFileName = name + Constants.JAVA_EXTENSION;
         context.put(Constants.NAME, name);
 
         // Generate Problem File
-        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "platform",  platform);
+        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "platform", platform);
         File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
         Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_PROBLEM, problemFile, context);
     }
 
 
     private void generateTestFile(String platform, String serialNo, String name, int size) throws IOException {
-        String baseFileName = name + "Test"+ Constants.JAVA_EXTENSION;
+        String baseFileName = name + "Test" + Constants.JAVA_EXTENSION;
         context.put(Constants.NAME, name);
         context.put(Constants.SIZE, size);
 
