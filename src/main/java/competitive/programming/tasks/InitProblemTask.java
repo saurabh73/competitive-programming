@@ -104,19 +104,32 @@ public class InitProblemTask extends DefaultTask {
         generateProblemFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass());
 
         // Generate Test Files
-        String projectDir = project.getProjectDir().getAbsolutePath();
-        String baseTestResourcePath = extension.getBaseTestResourcePath();
-        Path baseTargetTestResourceFile = Paths.get(projectDir, baseTestResourcePath, platform, "problem" + serialNo);
+        Path baseTargetTestResourceFile = prepareTestResource(platform, serialNo);
         for (int i = 0; i < parsedInput.getTests().size(); i++) {
             generateTestResource(baseTargetTestResourceFile, "input", i + 1, parsedInput.getTests().get(i).getInput());
             generateTestResource(baseTargetTestResourceFile, "output", i + 1, parsedInput.getTests().get(i).getOutput());
         }
         generateTestFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass(), parsedInput.getTests().size());
+
+    }
+
+    private Path prepareTestResource(String platform, String serialNo) throws IOException {
+        String projectDir = project.getProjectDir().getAbsolutePath();
+        String baseTestResourcePath = extension.getBaseTestResourcePath();
+        Path baseTargetTestResourceFile = Paths.get(projectDir, baseTestResourcePath, platform, "problem" + serialNo);
+        boolean resourceExists = baseTargetTestResourceFile.toFile().exists();
+        if (!resourceExists) {
+            resourceExists = baseTargetTestResourceFile.toFile().createNewFile();
+        }
+        if (!resourceExists) {
+            throw new IOException("Cannot create path: " + baseTargetTestResourceFile.toUri());
+        }
+        return baseTargetTestResourceFile;
     }
 
     private void generateTestResource(Path baseTargetTestFile, String fileBaseName, int index, String data) throws IOException {
-        Path path =  Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index, Constants.TXT_EXTENSION);
-        System.out.println("Writing File to Path: " + path.toFile().toURI());
+        Path path =  Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index + Constants.TXT_EXTENSION);
+        System.out.println("Writing File to Path: " + path.toUri());
         Files.write(path, data.getBytes(StandardCharsets.UTF_8));
     }
 
