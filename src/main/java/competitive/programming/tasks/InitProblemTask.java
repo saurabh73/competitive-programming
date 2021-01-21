@@ -90,7 +90,7 @@ public class InitProblemTask extends DefaultTask {
         URL link = parsedInput.getUrl();
         String platform = Utility.getPlatform(link);
 
-        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), platform);
+        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "platform", platform);
         String serialNo = getProblemSerialNumber(targetFilePath.toFile());
 
         // Update Context
@@ -108,7 +108,7 @@ public class InitProblemTask extends DefaultTask {
         context.put(Constants.NAME, name);
 
         // Generate Problem File
-        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), platform);
+        Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "platform",  platform);
         File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
         Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_PROBLEM, problemFile, context);
     }
