@@ -80,7 +80,7 @@ public class ProblemFileCreatorTask extends DefaultTask {
                 new FkMethods("GET", new TkIndex())
         ));
         FtBasic post = new FtBasic(new TkFork(pathMethod), port);
-        post.start(new Exit.Not(() -> pluginInput.getProblemInput() != null));
+        post.start(new Exit.Not(() -> pluginInput.getProblemInput() == null));
         ProblemInput parsedInput = pluginInput.getProblemInput();
 
         System.out.println(parsedInput.getName());
