@@ -21,21 +21,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ${name}Test {
 
     private ByteArrayOutputStream buffer;
-    private String testFilePath;
 
     @BeforeEach
-    void setup() {
+    public void setup() {
         buffer = new ByteArrayOutputStream();
         System.setOut(new PrintStream(buffer));
     }
 
     #foreach($i in [1..$size])
-    ${TAB}@Test
-    void testSolveInput${i}() throws Exception {
+    @Test
+    public void testSolveInput${i}() throws Exception {
         // Input
-        InputStream inputStream = this.getClass().getResourceAsStream( "/${platform}/problem${serial_no}/input${i}.txt");
+        InputStream inputStream = this.getClass().getResourceAsStream("/${platform}/problem${serial_no}/input${i}.txt");
         // Output
-        InputStream outPutStream = this.getClass().getResourceAsStream( "/${platform}/problem${serial_no}/output${i}.txt");
+        InputStream outPutStream = this.getClass().getResourceAsStream("/${platform}/problem${serial_no}/output${i}.txt");
         // Call Method Under Test
         ISolution problem = new ${name}();
         problem.solve(inputStream);
@@ -48,7 +47,7 @@ public class ${name}Test {
 
 
     @AfterEach
-    void cleanup() {
+    public void cleanup() {
         buffer.reset();
     }
 }
