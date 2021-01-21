@@ -63,14 +63,14 @@ public class Utility {
         String projectDir = project.getProjectDir().getAbsolutePath();
         String baseSourcePath = extension.getBaseSourcePath();
         String basePackagePath = extension.getBasePackage().replaceAll("\\.", File.separator);
-        return Paths.get(projectDir, baseSourcePath, "platform", basePackagePath).toFile().getAbsolutePath();
+        return Paths.get(projectDir, baseSourcePath, basePackagePath, "platform").toFile().getAbsolutePath();
     }
 
     public static String getBaseTestPath(Project project, CompetitiveProgrammingExtension extension) {
         String projectDir = project.getProjectDir().getAbsolutePath();
         String baseTestPath = extension.getBaseTestPath();
         String basePackagePath = extension.getBasePackage().replaceAll("\\.", File.separator);
-        return Paths.get(projectDir, baseTestPath, "platform", basePackagePath).toFile().getAbsolutePath();
+        return Paths.get(projectDir, baseTestPath, basePackagePath, "platform").toFile().getAbsolutePath();
     }
 
     public static String toAbsolutePath(Path path) {
