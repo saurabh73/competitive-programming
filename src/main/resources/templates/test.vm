@@ -30,7 +30,7 @@ public class ${name}Test {
     }
 
     #foreach($i in [1..$size])
-    @Test
+    ${TAB}@Test
     void testSolveInput${i}() throws Exception {
         // Input
         InputStream inputStream = this.getClass().getResourceAsStream( "/${platform}/problem${serial_no}/input${i}.txt");
@@ -41,7 +41,7 @@ public class ${name}Test {
         problem.solve(inputStream);
         //Assertion
         String actual = buffer.toString().trim();
-        String expected =  IOUtils.toString(outPutStream, Charset.defaultCharset());
+        String expected =  IOUtils.toString(outPutStream, Charset.defaultCharset()).trim();
         assertEquals(expected, actual);
     }
     #end

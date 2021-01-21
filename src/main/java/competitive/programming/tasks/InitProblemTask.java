@@ -57,6 +57,7 @@ public class InitProblemTask extends DefaultTask {
         // add Variables to context
         context.put("StringUtils", StringUtils.class);
         context.put("NEWLINE", System.lineSeparator());
+        context.put("TAB", "\t");
         context.put(Constants.AUTHOR, extension.getAuthor());
         context.put(Constants.GITHUB_USERNAME, extension.getGithubUsername());
         context.put(Constants.BASE_PACKAGE, extension.getBasePackage());
