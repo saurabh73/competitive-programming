@@ -37,4 +37,5 @@ public interface Constants {
     int PORT = 7373;
     String SERIAL_NO = "serial_no";
     String SIZE = "size";
+    String TXT_EXTENSION = "txt";
 }

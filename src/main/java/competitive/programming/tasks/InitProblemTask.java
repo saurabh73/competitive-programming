@@ -115,7 +115,9 @@ public class InitProblemTask extends DefaultTask {
     }
 
     private void generateTestResource(Path baseTargetTestFile, String fileBaseName, int index, String data) throws IOException {
-        Files.write(Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index), data.getBytes(StandardCharsets.UTF_8));
+        Path path =  Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index, Constants.TXT_EXTENSION);
+        System.out.println("Writing File to Path: " + path.toFile().toURI());
+        Files.write(path, data.getBytes(StandardCharsets.UTF_8));
     }
 
     private void generateProblemFile(String platform, String serialNo, String name) throws IOException {
