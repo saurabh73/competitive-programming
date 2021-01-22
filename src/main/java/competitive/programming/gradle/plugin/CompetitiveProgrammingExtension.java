@@ -3,7 +3,7 @@ package competitive.programming.gradle.plugin;
 import lombok.Data;
 
 /**
- * @author Saurabh Dutta <saurabh73>
+ * @author Saurabh Dutta (saurabh73)
  */
 @Data
 public class CompetitiveProgrammingExtension {

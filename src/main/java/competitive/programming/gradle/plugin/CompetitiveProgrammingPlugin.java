@@ -9,7 +9,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
 /**
- * @author Saurabh Dutta <saurabh73>
+ * @author Saurabh Dutta (saurabh73)
  */
 public class CompetitiveProgrammingPlugin implements Plugin<Project> {
     public void apply(Project project) {

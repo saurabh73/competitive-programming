@@ -45,7 +45,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author Saurabh Dutta <saurabh73>
+ * @author Saurabh Dutta (saurabh73)
  * Task method for buildProblem Gradle task
  */
 public class BuildSolutionTask extends DefaultTask {

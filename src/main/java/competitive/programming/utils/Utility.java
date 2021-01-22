@@ -21,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
- * @author Saurabh Dutta <saurabh73>
+ * @author Saurabh Dutta (saurabh73)
  * Utility Class
  */
 public class Utility {

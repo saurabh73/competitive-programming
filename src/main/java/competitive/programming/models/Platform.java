@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.net.URL;
 
 /**
- * @author Saurabh Dutta <saurabh73>
+ * @author Saurabh Dutta (saurabh73)
  */
 public enum Platform {
     // supported platforms

@@ -32,7 +32,7 @@ import java.util.Objects;
 import java.util.OptionalInt;
 
 /**
- * @author Saurabh Dutta <saurabh73>
+ * @author Saurabh Dutta (saurabh73)
  * Task method for initProblem Gradle task
  */
 public class InitProblemTask extends DefaultTask {
