@@ -29,8 +29,9 @@ public class ${name}Test {
     }
 
     #foreach($i in [1..$size])
+    ${NEWLINE}
     @Test
-    public void testSolveInput${i}() throws Exception {
+    public void case{i}Test() throws Exception {
         // Input
         InputStream inputStream = this.getClass().getResourceAsStream("/${platform}/problem${serial_no}/input${i}.txt");
         // Output
