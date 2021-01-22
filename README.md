@@ -7,9 +7,7 @@ by [Source: Manwe56/competitive-programming](https://github.com/Manwe56/competit
 
 ## Why?
 
-This project aims at sharing with the community those Java code I appreciate in the challenges and are helping you gain
-time, allowing you to develop in several files with a one click build, and sharing a common set of codes between
-challenges. Don't reinvent the wheel, focus on the subject!
+This plugin aims to help in the competitive programming challenges by allowing you to develop in several files with a one click build, and sharing a common set of codes between challenges. Don't reinvent the wheel, focus on the subject! Supports Problem parsing and Junit based test case matching for better testing and debugging.
 
 ## Dependency
 
