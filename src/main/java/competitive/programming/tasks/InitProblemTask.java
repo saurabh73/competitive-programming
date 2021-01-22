@@ -79,13 +79,14 @@ public class InitProblemTask extends DefaultTask {
     public void taskAction() throws IOException {
         this.prepareAction();
         // Start Server
-        System.out.printf("Competitive Plugin Enabled.\nClick on Parse Task Button or input with http://localhost:%d\n", Constants.PORT);
+        int port = extension.getPort();
+        System.out.printf("Competitive Plugin Enabled.\nClick on Parse Task Button or input with http://localhost:%d\n", port);
         TakeProblemInput pluginInput = new TakeProblemInput();
         FkRegex pathMethod = new FkRegex("/", new TkFork(
                 new FkMethods("POST", pluginInput),
                 new FkMethods("GET", new TkIndex())
         ));
-        FtBasic post = new FtBasic(new TkFork(pathMethod), Constants.PORT);
+        FtBasic post = new FtBasic(new TkFork(pathMethod), extension.getPort());
         post.start(new Exit.Not(() -> pluginInput.getProblemInput() == null));
 
         // Take I

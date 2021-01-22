@@ -14,4 +14,5 @@ public class CompetitiveProgrammingExtension {
     private String baseSourcePath = "src/main/java";
     private String baseTestPath = "src/test/java";
     private String baseTestResourcePath = "src/test/resources";
+    private int port = 6174;
 }

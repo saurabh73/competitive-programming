@@ -17,11 +17,12 @@ challenges. Don't reinvent the wheel, focus on the subject!
 
 ## Features:
 
-- Create Problem file from template
-- Reuse common utility class, avoid writing same core logic with ugly templates
+- Parse Problem and generate boilerplate code with  
+- Reuse common utility class, avoid writing same core logic (eg. Input Reader, GCD etc)
 - Problem parsing with [Competitive Companion](https://github.com/jmerle/competitive-companion)
 - Manual input with local server hosted on http://localhost:7373
 - Generate a single solution file to be uploaded to platform.
+- Support @Entry Annotation for parsing Leetcode problems.
 
 #### Installing Plugin (Currently on jitpack)
 
@@ -60,6 +61,7 @@ dependencies {
 competitiveProgramming {
     author = "Saurabh Dutta"
     githubUsername = "saurabh73"
+    port = "7373"
 }
 ```
 
@@ -68,13 +70,15 @@ competitiveProgramming {
 | Property             | Required | Default                          |
 | -------------------- | -------- | -------------------------------- |
 | author               | yes      |                                  |
-| githubUsername       | no       |
+| githubUsername       | no       |                                  |
+| port                 | no       | 6174                             |
 | basePackage          | no       | competitive.programming.practice |
 | baseOutputPath       | no       | output                           |
 | baseSourcePath       | no       | src/main/java                    |
 | baseTestPath         | no       | src/test/java                    |
 | baseTestResourcePath | no       | src/test/resources               |
                          
+**NOTE:** For any custom port, update custom port in  [Competitive Companion](https://github.com/jmerle/competitive-companion) as well
 ### Initialize Problem file
 
 Generate Problem Java Files:
@@ -85,8 +89,7 @@ Run command:
 ./gradlew initProblem
 ```
 
-Parse problem with [Competitive Companion](https://github.com/jmerle/competitive-companion) plugin with `7373` custom
-port enabled
+Parse problem with [Competitive Companion](https://github.com/jmerle/competitive-companion) 
 
 **Install Links:**
 
@@ -95,7 +98,7 @@ port enabled
 
 **or**
 
-use http://localhost:7373 (for manual input eg Leetcode, Hackerearth Codemonk)
+use http://localhost:6174 (or configured port, for manual input eg Leetcode, Hackerearth Codemonk)
 
 ![Screenshot](https://res.cloudinary.com/dren4jgbp/image/upload/v1611277157/Screenshot_2021-01-22_Competitive_Programming_Gradle_Plugin_Input_Form_dtzcpo.png)
 
