@@ -3,7 +3,7 @@
 Java only version of competitive programming toolkit, inspired
 by [Source: Manwe56/competitive-programming](https://github.com/Manwe56/competitive-programming)
 
-> **Credit:** `BuildSolution.java`  - [Source: Manwe56](https://github.com/Manwe56/competitive-programming/blob/master/src/main/java/builder/FileBuilder.java)
+> **Credit:** `BuildSolutionTask.java`  - [Source: Manwe56](https://github.com/Manwe56/competitive-programming/blob/master/src/main/java/builder/FileBuilder.java)
 
 ## Why?
 
@@ -74,7 +74,7 @@ competitiveProgramming {
 | baseSourcePath       | no       | src/main/java                    |
 | baseTestPath         | no       | src/test/java                    |
 | baseTestResourcePath | no       | src/test/resources               |
-                         |
+                         
 ### Initialize Problem file
 
 Generate Problem Java Files:
@@ -90,8 +90,7 @@ port enabled
 
 **Install Links:**
 
-- [**
-  Chrome** extension](https://chrome.google.com/webstore/detail/competitive-companion/cjnmckjndlpiamhfimnnjmnckgghkjbl)
+- [**Chrome** extension](https://chrome.google.com/webstore/detail/competitive-companion/cjnmckjndlpiamhfimnnjmnckgghkjbl)
 - [**Firefox** add-on](https://addons.mozilla.org/en-US/firefox/addon/competitive-companion/)
 
 **or**
