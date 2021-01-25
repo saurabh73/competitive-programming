@@ -10,7 +10,7 @@ targetCompatibility=1.8
 allprojects {
     apply plugin: 'java'
     group 'com.github.saurabh73'
-    version '1.5.0'
+    version '1.5.1'
 
     repositories {
         jcenter()
@@ -46,6 +46,7 @@ gradlePlugin {
     // Define the plugin
     plugins {
         CompetitiveProgrammingPlugin {
+
             id = 'com.github.saurabh73.competitive-programming'
             implementationClass = 'competitive.programming.gradle.plugin.CompetitiveProgrammingPlugin'
         }
@@ -53,7 +54,7 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://saurabhdutta.dev'
+    website = 'https://github.com/saurabh73/competitive-programming'
     vcsUrl = 'https://github.com/saurabh73/competitive-programming'
     description = 'This plugin aims to help in the competitive programming challenges by allowing you to develop in several files with a one click build, and sharing a common set of codes between challenges. Don\'t reinvent the wheel, focus on the subject! Supports Problem parsing and Junit based test case matching for better testing and debugging.'
     tags = ['competitive-programming', 'java']

@@ -3,9 +3,8 @@ package competitive.programming.tasks;
 import com.google.googlejavaformat.java.Formatter;
 import com.google.googlejavaformat.java.FormatterException;
 import competitive.programming.annotation.MethodSignature;
-import competitive.programming.annotation.leetcode.EntryAnnotationProcessor;
+import competitive.programming.annotation.EntryAnnotationProcessor;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
-import competitive.programming.models.Platform;
 import competitive.programming.utils.Constants;
 import competitive.programming.utils.Utility;
 import lombok.Data;
@@ -23,9 +22,7 @@ import org.joor.Reflect;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
@@ -41,8 +38,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author Saurabh Dutta (saurabh73)
@@ -102,32 +97,27 @@ public class BuildSolutionTask extends DefaultTask {
         // process input
         URLClassLoader classLoader = Utility.getClassLoader(project);
         classLoader.loadClass(inputClassName);
-        String projectDir = this.project.getProjectDir().getAbsolutePath();
-        String baseSourcePath = this.extension.getBaseSourcePath();
-        File javaFile = Paths.get(projectDir, baseSourcePath, inputClassName.replaceAll("\\.", PATH_SEPARATOR) + Constants.JAVA_EXTENSION).toFile();
+        // String projectDir = this.project.getProjectDir().getAbsolutePath();
+        // String baseSourcePath = this.extension.getBaseSourcePath();
+        // File javaFile = Paths.get(projectDir, baseSourcePath, inputClassName.replaceAll("\\.", PATH_SEPARATOR) + Constants.JAVA_EXTENSION).toFile();
 
         String entryFile = this.buildMainFile(inputClassName);
         final ClassCode treated = this.processFile(entryFile);
         String formattedSource = this.createFormattedSource(treated);
 
-        // platform based adjustments
-        Platform platform = findCodePlatform(javaFile);
-        if (platform != null) {
-            switch (platform) {
-                case LEETCODE:
-                    formattedSource = processLeetcodeEntry(formattedSource);
-                    break;
-                default:
-                    logger.debug(platform.name());
-            }
+        if (formattedSource.contains("@Entry")) {
+            formattedSource = processEntryCode(formattedSource);
         }
         // copy to clipboard
         this.copyToClipBoard(formattedSource);
         // write source to file
         FileUtils.writeStringToFile(this.outputFile, formattedSource, StandardCharsets.UTF_8);
+        // print path
+        //System.out.println("Writing File to Path: " + this.outputFile.toURI());
+        System.out.println("Writing File to Path: " + Paths.get(this.outputFile.getAbsolutePath()).toUri());
     }
 
-    private String processLeetcodeEntry(String source) throws FormatterException {
+    private String processEntryCode(String source) throws FormatterException {
         EntryAnnotationProcessor annotationProcessor = new EntryAnnotationProcessor();
         String supportedAnnotation = annotationProcessor.getSupportedAnnotationTypes().iterator().next();
         String className = this.outputFile.getName().replace(Constants.JAVA_EXTENSION, Constants.EMPTY_STRING);
@@ -153,21 +143,6 @@ public class BuildSolutionTask extends DefaultTask {
         return source;
     }
 
-    private Platform findCodePlatform(File javaFile) throws IOException {
-        Pattern r = Pattern.compile(Platform.getPattern());
-        try (BufferedReader reader = new BufferedReader(new FileReader(javaFile))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Matcher m = r.matcher(line);
-                if (m.find()) {
-                    Platform platform = Platform.valueOf(m.group(1).toUpperCase());
-                    logger.debug("Detected Platform {}", platform.name());
-                    return platform;
-                }
-            }
-        }
-        return null;
-    }
 
     private String createFormattedSource(ClassCode treated) throws Exception {
         final List<String> lines = new ArrayList<>();
@@ -209,8 +184,7 @@ public class BuildSolutionTask extends DefaultTask {
                     innerClasses.put(absolutePath, processFile(absolutePath));
                 }
             }
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
 
@@ -231,35 +205,28 @@ public class BuildSolutionTask extends DefaultTask {
                     if (Paths.get(importedClassPath).toFile().exists()) {
                         logger.debug("Non Standard inport {}", line);
                         innerClasses.put(importedClassPath, processFile(importedClassPath));
-                    }
-                    else {
+                    } else {
                         logger.debug("Standard inport {}", line);
                         imports.add(line);
                     }
                 }
-            }
-            else {
+            } else {
                 if (fileKeyWordRead) {
                     code.afterClassContent.add(line);
-                }
-                else {
+                } else {
                     if (line.contains(Constants.ABSTRACT_CLASS)) {
                         code.declaration(line, Constants.ABSTRACT_CLASS);
                         fileKeyWordRead = true;
-                    }
-                    else if (line.contains(Constants.CLASS)) {
+                    } else if (line.contains(Constants.CLASS)) {
                         code.declaration(line, Constants.CLASS);
                         fileKeyWordRead = true;
-                    }
-                    else if (line.contains(Constants.INTERFACE)) {
+                    } else if (line.contains(Constants.INTERFACE)) {
                         code.declaration(line, Constants.INTERFACE);
                         fileKeyWordRead = true;
-                    }
-                    else if (line.contains(Constants.ENUM)) {
+                    } else if (line.contains(Constants.ENUM)) {
                         code.declaration(line, Constants.ENUM);
                         fileKeyWordRead = true;
-                    }
-                    else {
+                    } else {
                         code.beforeClassContent.add(line);
                     }
                 }
@@ -284,20 +251,16 @@ public class BuildSolutionTask extends DefaultTask {
                 }
                 // We can skip comments since generated file size might be
                 // limited
-            }
-            else if (trimmedLine.isEmpty()) {
+            } else if (trimmedLine.isEmpty()) {
                 // We don't need empty lines
-            }
-            else if (trimmedLine.startsWith(Constants.LINE_COMMENT)) {
+            } else if (trimmedLine.startsWith(Constants.LINE_COMMENT)) {
                 // We can skip comments since generated file size might be limited
-            }
-            else if (trimmedLine.startsWith(Constants.START_COMMENT)) {
+            } else if (trimmedLine.startsWith(Constants.START_COMMENT)) {
                 // We can skip comments since generated file size might be limited
                 if (!trimmedLine.contains(Constants.END_COMMENT)) {
                     insideComment = true;
                 }
-            }
-            else {
+            } else {
                 fileKeyWordRead = addLineToCode(code, fileKeyWordRead, line);
             }
         }
@@ -307,8 +270,7 @@ public class BuildSolutionTask extends DefaultTask {
     private List<String> readFile(String fileName) {
         try {
             return Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-        }
-        catch (final IOException e) {
+        } catch (final IOException e) {
             System.err.println("Error while reading file " + fileName);
             throw new IllegalStateException("Unable to continue");
         }

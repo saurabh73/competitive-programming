@@ -1,4 +1,6 @@
-package competitive.programming.annotation.leetcode;
+package competitive.programming.annotation;
+
+import lombok.Getter;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
@@ -21,18 +23,14 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import competitive.programming.annotation.AnnotationProcessorException;
-import competitive.programming.annotation.MethodSignature;
-import lombok.Getter;
-
 @SupportedAnnotationTypes("competitive.programming.annotation.leetcode.Entry")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class EntryAnnotationProcessor extends AbstractProcessor {
 
     @Getter
-    private List<MethodSignature> methodSignatures;
+    private final List<MethodSignature> methodSignatures;
     @Getter
-    private Set<String> importClasses;
+    private final Set<String> importClasses;
 
     public EntryAnnotationProcessor(){
         methodSignatures = new ArrayList<>();

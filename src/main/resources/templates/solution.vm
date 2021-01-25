@@ -1,6 +1,9 @@
 import ${basePackage}.base.ISolution;
 import ${importPath};
 
+/**
+* @author ${author}#if($StringUtils.isNotEmpty($githubUsername))(${githubUsername})#end${NEWLINE}*
+**/
 public class Solution {
     public static void main(String[] args) throws Exception {
         ISolution solution = new ${className}();
