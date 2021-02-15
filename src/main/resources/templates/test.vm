@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 * @author ${author}#if($StringUtils.isNotEmpty($githubUsername))(${githubUsername})#end${NEWLINE}*
 * #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end ${NEWLINE}*
 **/
-public class ${name}Test {
+public class ${name}Test extends BaseTest {
 
     public ${name}Test() {
         super("/${platform}/problem${serial_no}/", new ${name}());
