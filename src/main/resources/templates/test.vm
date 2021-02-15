@@ -1,54 +1,25 @@
 package ${basePackage}.platform.${platform}.problem${serial_no};
-import ${basePackage}.base.ISolution;
 
-import org.apache.commons.io.IOUtils;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import ${basePackage}.base.BaseTest;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
-*
 * Test for ${name}.java ${NEWLINE}*
 * @author ${author}#if($StringUtils.isNotEmpty($githubUsername))(${githubUsername})#end${NEWLINE}*
 * #if($StringUtils.isNotEmpty($link))@see <a href="${link}">${link}</a>#end ${NEWLINE}*
 **/
 public class ${name}Test {
 
-    private ByteArrayOutputStream buffer;
-
-    @BeforeEach
-    public void setup() {
-        buffer = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(buffer));
+    public ${name}Test() {
+        super("/${platform}/problem${serial_no}/", new ${name}());
     }
 
     #foreach($i in [1..$size])
     ${NEWLINE}
     @Test
     public void case${i}Test() throws Exception {
-        // Input
-        InputStream inputStream = this.getClass().getResourceAsStream("/${platform}/problem${serial_no}/input${i}.txt");
-        // Output
-        InputStream outPutStream = this.getClass().getResourceAsStream("/${platform}/problem${serial_no}/output${i}.txt");
-        // Call Method Under Test
-        ISolution problem = new ${name}();
-        problem.solve(inputStream);
-        //Assertion
-        String actual = buffer.toString().trim();
-        String expected =  IOUtils.toString(outPutStream, Charset.defaultCharset()).trim();
-        assertEquals(expected, actual);
+        runTest("input${i}.txt", "output${i}.txt");
     }
     #end
 
-
-    @AfterEach
-    public void cleanup() {
-        buffer.reset();
-    }
 }

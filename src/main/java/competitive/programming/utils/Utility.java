@@ -50,7 +50,8 @@ public class Utility {
     }
 
     public static void writeFileWithVelocityTemplate(String templateFile, File file, VelocityContext context) throws IOException {
-        System.out.println("Writing File to Path: " + file.toURI());
+        Path path = Paths.get(file.getAbsolutePath());
+        System.out.println("Writing File to Path: " + path.toUri());
         // generate structure
         file.getParentFile().mkdirs();
         Writer writer = new FileWriter(file);
@@ -83,15 +84,14 @@ public class Utility {
         try {
             return InternetDomainName.from(host).topPrivateDomain().toString().split("\\.")[0];
         } catch (Exception ex) {
-            return  "misc";
+            return "misc";
         }
     }
 
     public static void ignoringExc(RunnableExc r) {
         try {
             r.run();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             // ignore
         }
     }

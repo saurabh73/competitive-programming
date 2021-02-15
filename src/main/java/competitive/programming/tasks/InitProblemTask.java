@@ -72,6 +72,14 @@ public class InitProblemTask extends DefaultTask {
             }
             Utility.writeFileWithVelocityTemplate("/templates/base.vm", targetFilePath.toFile(), context);
         }
+        Path targetTestFilePath = Paths.get(Utility.getBaseTestPath(project, extension), "base", "BaseTest.java");
+        if (!targetTestFilePath.toFile().exists()) {
+            // Add Missing Directory
+            if (!targetTestFilePath.toFile().getParentFile().exists()) {
+                targetTestFilePath.toFile().getParentFile().mkdirs();
+            }
+            Utility.writeFileWithVelocityTemplate("/templates/base-test.vm", targetTestFilePath.toFile(), context);
+        }
     }
 
 
