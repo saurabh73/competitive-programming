@@ -13,14 +13,13 @@ allprojects {
     version '1.6.1'
 
     repositories {
-        jcenter()
         maven { url 'https://jitpack.io' }
         mavenLocal()
         mavenCentral()
     }
     dependencies {
-        compileOnly 'org.projectlombok:lombok:1.18.12'
-        annotationProcessor 'org.projectlombok:lombok:1.18.12'
+        compileOnly 'org.projectlombok:lombok:1.18.22'
+        annotationProcessor 'org.projectlombok:lombok:1.18.22'
     }
 }
 
