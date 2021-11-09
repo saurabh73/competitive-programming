@@ -11,6 +11,10 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.commonmark.Extension;
+import org.commonmark.ext.gfm.tables.TablesExtension;
+import org.commonmark.node.Node;
+import org.commonmark.parser.Parser;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
 import org.gradle.api.tasks.TaskAction;
@@ -21,6 +25,7 @@ import org.takes.http.Exit;
 import org.takes.http.FtBasic;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -28,6 +33,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
 
@@ -70,7 +77,7 @@ public class InitProblemTask extends DefaultTask {
             if (!targetFilePath.toFile().getParentFile().exists()) {
                 targetFilePath.toFile().getParentFile().mkdirs();
             }
-            Utility.writeFileWithVelocityTemplate("/templates/base.vm", targetFilePath.toFile(), context);
+            Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_BASE_SOLUTION, targetFilePath.toFile(), context);
         }
         Path targetTestFilePath = Paths.get(Utility.getBaseTestPath(project, extension), "base", "BaseTest.java");
         if (!targetTestFilePath.toFile().exists()) {
@@ -78,7 +85,11 @@ public class InitProblemTask extends DefaultTask {
             if (!targetTestFilePath.toFile().getParentFile().exists()) {
                 targetTestFilePath.toFile().getParentFile().mkdirs();
             }
-            Utility.writeFileWithVelocityTemplate("/templates/base-test.vm", targetTestFilePath.toFile(), context);
+            Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_BASE_TEST, targetTestFilePath.toFile(), context);
+        }
+        Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(),  "solutions.md");
+        if (!targetMarkdownFile.toFile().exists()) {
+            Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
         }
     }
 
@@ -151,6 +162,19 @@ public class InitProblemTask extends DefaultTask {
         Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "platform", platform);
         File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
         Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_PROBLEM, problemFile, context);
+
+        // Add to Solutions.md
+        Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(),  "solutions.md");
+        updateMarkdownFile(problemFile, targetMarkdownFile, context);
+    }
+
+    private void updateMarkdownFile(File problemFile, Path targetMarkdownFile, VelocityContext context) {
+        String markdownTable = Utility.parseMarkdownTable(targetMarkdownFile);
+        List<Extension> extensions = Collections.singletonList(TablesExtension.create());
+        Parser parser = Parser.builder().extensions(extensions).build();
+        Node document = parser.parse(markdownTable);
+        Node header = document.getFirstChild();
+        System.out.println("Header "+header.toString());
     }
 
 

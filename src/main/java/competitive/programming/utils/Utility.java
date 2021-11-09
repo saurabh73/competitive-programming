@@ -8,7 +8,10 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.gradle.api.Project;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -98,5 +101,28 @@ public class Utility {
 
     public static String getClassName(String fullClassName) {
         return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
+    }
+
+    public static String parseMarkdownTable(Path targetMarkdownFile) {
+        StringBuilder resultStringBuilder = new StringBuilder();
+        boolean appendFlag = false;
+        try (BufferedReader br = new BufferedReader(new FileReader(targetMarkdownFile.toFile()))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.equalsIgnoreCase("<!--TABLE_STARTS_HERE-->")) {
+                    appendFlag = true;
+                }
+                if (line.equalsIgnoreCase("<!--TABLE_ENDS_HERE-->")) {
+                    appendFlag = false;
+                }
+                if (appendFlag) {
+                    resultStringBuilder.append(line).append("\n");
+                }
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultStringBuilder.toString();
     }
 }

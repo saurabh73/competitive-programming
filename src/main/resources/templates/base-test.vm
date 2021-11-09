@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.nio.charset.Charset;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public abstract class BaseTest {
 
@@ -32,6 +33,7 @@ public abstract class BaseTest {
         solution.solve(inputStream);
         //Assertion
         String actual = buffer.toString().trim();
+        assertNotNull(outPutStream);
         String expected = IOUtils.toString(outPutStream, Charset.defaultCharset()).trim();
         assertEquals(expected, actual);
     }
