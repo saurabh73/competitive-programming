@@ -46,7 +46,7 @@ public class Utility {
 
     public static URLClassLoader getClassLoader(Project project) throws MalformedURLException {
         File buildDir = new File(project.getBuildDir(), String.format(Constants.BUILD_PATH, File.separator));
-        return new URLClassLoader(new URL[]{buildDir.toURL()});
+        return new URLClassLoader(new URL[]{buildDir.toURI().toURL()});
     }
 
     public static void writeFileWithVelocityTemplate(String templateFile, File file, VelocityContext context) throws IOException {
