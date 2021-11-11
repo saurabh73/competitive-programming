@@ -87,7 +87,7 @@ public class BuildSolutionTask extends DefaultTask {
     @TaskAction
     public void taskAction() throws Exception {
         // cleanup
-        logger.info("Running Clean up");
+        System.out.println("Running Clean up");
         this.outputFile.delete();
         // take input
         Scanner scanner = new Scanner(System.in);
@@ -164,7 +164,7 @@ public class BuildSolutionTask extends DefaultTask {
     }
 
     private ClassCode processFile(String fileName) {
-        logger.info("reading class content of {}", fileName);
+        System.out.println("reading class content of "+ fileName);
         knownFiles.add(Utility.toAbsolutePath(Paths.get(fileName)));
         final List<String> fileContent = readFile(fileName);
         final ClassCode code = readFileContent(fileName, fileContent);
@@ -271,7 +271,7 @@ public class BuildSolutionTask extends DefaultTask {
         try {
             return Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
         } catch (final IOException e) {
-            System.err.println("Error while reading file " + fileName);
+            System.out.println("Error while reading file " + fileName);
             throw new IllegalStateException("Unable to continue");
         }
     }
