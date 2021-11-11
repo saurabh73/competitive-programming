@@ -31,7 +31,7 @@ public interface Constants {
     String END_CURLY_BRACE = "}";
 
     // Template files
-    String TEMPLATE_BASE_SOLUTION ="/templates/base-test.vm";
+    String TEMPLATE_BASE_SOLUTION ="/templates/base.vm";
     String TEMPLATE_SOLUTION = "/templates/solution.vm";
     String TEMPLATE_PROBLEM = "/templates/problem.vm";
     String TEMPLATE_MARKDOWN = "/templates/solutions-markdown.vm";

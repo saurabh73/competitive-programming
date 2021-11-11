@@ -96,7 +96,6 @@ public class InitProblemTask extends DefaultTask {
         if (!targetMarkdownFile.toFile().exists()) {
             context.put("markdownTable", MarkdownUtility.defaultTable());
             Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
-            context.remove("markdownTable");
         }
     }
 

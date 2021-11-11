@@ -54,7 +54,7 @@ public class Utility {
         System.out.println("Writing File to Path: " + path.toUri());
         // generate structure
         file.getParentFile().mkdirs();
-        Writer writer = new FileWriter(file, false);
+        Writer writer = new FileWriter(file);
         Velocity.mergeTemplate(templateFile, StandardCharsets.UTF_8.displayName(), context, writer);
         writer.flush();
         writer.close();
