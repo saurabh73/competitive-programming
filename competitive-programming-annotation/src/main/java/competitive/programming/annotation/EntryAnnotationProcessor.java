@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-@SupportedAnnotationTypes("competitive.programming.annotation.leetcode.Entry")
+@SupportedAnnotationTypes("competitive.programming.annotation.Entry")
 @SupportedSourceVersion(SourceVersion.RELEASE_8)
 public class EntryAnnotationProcessor extends AbstractProcessor {
 
