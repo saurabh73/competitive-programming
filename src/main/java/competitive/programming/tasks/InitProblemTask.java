@@ -96,6 +96,7 @@ public class InitProblemTask extends DefaultTask {
         if (!targetMarkdownFile.toFile().exists()) {
             context.put("markdownTable", MarkdownUtility.defaultTable());
             Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
+            context.remove("markdownTable");
         }
     }
 
@@ -187,9 +188,8 @@ public class InitProblemTask extends DefaultTask {
         tableBuilder.addRow(problemLink, fileLink, platform, today, "`todo`", "`pending`", "");
 
         System.out.println(tableBuilder.build());
-        context.put("markdownTable", tableBuilder.build().toString());
+        // context.put("markdownTable", tableBuilder.build().toString());
         // Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
-
     }
 
 
@@ -204,8 +204,11 @@ public class InitProblemTask extends DefaultTask {
         TableHead tableHead = (TableHead) table.getFirstChild();
         MarkdownUtility.paresTableHead(tableHead, tableBuilder);
         // Parse Table Body
-        Node tableBody = table.getLastChild();
-        MarkdownUtility.parseTableBody(tableBody, tableBuilder);
+
+        Node tableBody = tableHead.getNext();
+        if (tableBody != null) {
+            MarkdownUtility.parseTableBody(tableBody, tableBuilder);
+        }
 
         return tableBuilder;
     }
