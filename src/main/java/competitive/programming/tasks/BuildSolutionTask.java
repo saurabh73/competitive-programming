@@ -201,12 +201,13 @@ public class BuildSolutionTask extends DefaultTask {
         if (!line.startsWith(Constants.PACKAGE)) {
             if (line.startsWith(Constants.IMPORT)) {
                 final String importedClassPath = importToPath(line);
+                System.out.println(importedClassPath);
                 if (!knownFiles.contains(importedClassPath)) {
                     if (Paths.get(importedClassPath).toFile().exists()) {
-                        logger.debug("Non Standard inport {}", line);
+                        System.out.println("Non Standard import {}"+ line);
                         innerClasses.put(importedClassPath, processFile(importedClassPath));
                     } else {
-                        logger.debug("Standard inport {}", line);
+                        System.out.println("Standard import {}"+ line);
                         imports.add(line);
                     }
                 }
