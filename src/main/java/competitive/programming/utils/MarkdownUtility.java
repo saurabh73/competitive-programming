@@ -39,6 +39,7 @@ public class MarkdownUtility {
         }
         return resultStringBuilder.toString();
     }
+
     public static void parseTableBody(Node tableBody, Table.Builder tableBuilder) {
         TableRow row = (TableRow) tableBody.getFirstChild();
         // loop on all table rows
@@ -80,8 +81,8 @@ public class MarkdownUtility {
 
     public static void paresTableHead(TableHead tableHead, Table.Builder tableBuilder) {
         TableRow headingRow = (TableRow) tableHead.getFirstChild();
-        TableCell tableCell = (TableCell) headingRow.getFirstChild();
         List<Object> headings = new ArrayList<>();
+        TableCell tableCell = (TableCell) headingRow.getFirstChild();
         while (tableCell != null) {
             Text text = (Text) tableCell.getFirstChild();
             headings.add(text.getLiteral());
@@ -92,7 +93,7 @@ public class MarkdownUtility {
 
     public static String defaultTable() {
         return new Table.Builder()
-                .addRow("Problem", "File", "Platform", "Date", "Tags", "Status","Comments")
+                .addRow("Problem", "File", "Platform", "Date", "Tags", "Status", "Notes")
                 .build()
                 .toString();
     }
