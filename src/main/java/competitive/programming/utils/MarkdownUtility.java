@@ -92,7 +92,7 @@ public class MarkdownUtility {
 
     public static String defaultTable() {
         return new Table.Builder()
-                .addRow("Problem", "File", "Platform", "Tags", "Status","Comments")
+                .addRow("Problem", "File", "Platform", "Date", "Tags", "Status","Comments")
                 .build()
                 .toString();
     }

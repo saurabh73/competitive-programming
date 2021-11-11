@@ -8,10 +8,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.gradle.api.Project;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -57,7 +54,7 @@ public class Utility {
         System.out.println("Writing File to Path: " + path.toUri());
         // generate structure
         file.getParentFile().mkdirs();
-        Writer writer = new FileWriter(file);
+        Writer writer = new FileWriter(file, false);
         Velocity.mergeTemplate(templateFile, StandardCharsets.UTF_8.displayName(), context, writer);
         writer.flush();
         writer.close();
@@ -102,6 +99,5 @@ public class Utility {
     public static String getClassName(String fullClassName) {
         return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
     }
-
 
 }

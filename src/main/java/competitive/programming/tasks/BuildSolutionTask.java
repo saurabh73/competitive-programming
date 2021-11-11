@@ -47,7 +47,6 @@ public class BuildSolutionTask extends DefaultTask {
 
     private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String PATH_SEPARATOR = File.separator.equalsIgnoreCase("\\") ? "\\" : "/";
-    private final CompetitiveProgrammingExtension extension;
     private final Project project;
     private final VelocityContext context;
     private final File outputFile;
@@ -65,7 +64,7 @@ public class BuildSolutionTask extends DefaultTask {
         setDescription("Build consolidated solution file");
         setDependsOn(Collections.singleton("build"));
         project = getProject();
-        extension = getProject().getExtensions().findByType(CompetitiveProgrammingExtension.class);
+        CompetitiveProgrammingExtension extension = getProject().getExtensions().findByType(CompetitiveProgrammingExtension.class);
         formatter = new Formatter();
         logger = project.getLogger();
         Utility.validatedExtension(extension);
@@ -76,7 +75,7 @@ public class BuildSolutionTask extends DefaultTask {
         context = new VelocityContext();
         context.put(Constants.BASE_PACKAGE, extension.getBasePackage());
         String fileName = "Solution.java";
-        this.outputFile = Paths.get(this.project.getProjectDir().getAbsolutePath(), this.extension.getBaseOutputPath(), fileName).toFile();
+        this.outputFile = Paths.get(this.project.getProjectDir().getAbsolutePath(), extension.getBaseOutputPath(), fileName).toFile();
 
         // TODO: add more config properties
         // Properties properties = new Properties();
@@ -252,7 +251,7 @@ public class BuildSolutionTask extends DefaultTask {
                 // We can skip comments since generated file size might be
                 // limited
             } else if (trimmedLine.isEmpty()) {
-                // We don't need empty lines
+                // We don't need to empty lines
             } else if (trimmedLine.startsWith(Constants.LINE_COMMENT)) {
                 // We can skip comments since generated file size might be limited
             } else if (trimmedLine.startsWith(Constants.START_COMMENT)) {

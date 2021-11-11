@@ -34,8 +34,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.OptionalInt;
@@ -180,10 +182,12 @@ public class InitProblemTask extends DefaultTask {
         String baseFileName = parsedInput.getLanguages().getJava().getTaskClass() + Constants.JAVA_EXTENSION;
         String problemLink = String.format("[%s](%s)", parsedInput.getName(), parsedInput.getUrl().toString());
         String fileLink = String.format("[%s](%s)", baseFileName, problemFile.relativize(Paths.get(project.getProjectDir().getAbsolutePath())));
-        tableBuilder.addRow(problemLink, fileLink, platform, "", "", "");
+        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        tableBuilder.addRow(problemLink, fileLink, platform, today, "", "", "");
 
-        context.put("markdownTable", tableBuilder.build());
-        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
+        System.out.println(tableBuilder.build());
+        context.put("markdownTable", tableBuilder.build().toString());
+        // Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
 
     }
 
