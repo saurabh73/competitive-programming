@@ -193,7 +193,7 @@ public class BuildSolutionTask extends DefaultTask {
 
     private String importToPath(String importStr) {
         final String className = importStr.substring(Constants.IMPORT.length()).replaceAll(Constants.SEMI_COLON, Constants.EMPTY_STRING);
-        return Utility.toAbsolutePath(Paths.get(Constants.SRC_ROOT_JAVA + className.replaceAll("\\.", PATH_SEPARATOR) + Constants.JAVA_EXTENSION));
+        return Paths.get(project.getProjectDir().getAbsolutePath(), Constants.SRC_ROOT_JAVA, className.replaceAll("\\.", PATH_SEPARATOR) + Constants.JAVA_EXTENSION).toFile().getAbsolutePath();
 
     }
 
