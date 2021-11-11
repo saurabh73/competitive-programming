@@ -47,6 +47,7 @@ public class BuildSolutionTask extends DefaultTask {
 
     private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String PATH_SEPARATOR = File.separator.equalsIgnoreCase("\\") ? "\\" : "/";
+    private final CompetitiveProgrammingExtension extension;
     private final Project project;
     private final VelocityContext context;
     private final File outputFile;
@@ -64,7 +65,7 @@ public class BuildSolutionTask extends DefaultTask {
         setDescription("Build consolidated solution file");
         setDependsOn(Collections.singleton("build"));
         project = getProject();
-        CompetitiveProgrammingExtension extension = getProject().getExtensions().findByType(CompetitiveProgrammingExtension.class);
+        extension = getProject().getExtensions().findByType(CompetitiveProgrammingExtension.class);
         formatter = new Formatter();
         logger = project.getLogger();
         Utility.validatedExtension(extension);
