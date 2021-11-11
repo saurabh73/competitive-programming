@@ -3,15 +3,18 @@ package competitive.programming.tasks;
 import competitive.programming.gradle.plugin.CompetitiveProgrammingExtension;
 import competitive.programming.models.ProblemInput;
 import competitive.programming.utils.Constants;
+import competitive.programming.utils.MarkdownUtility;
 import competitive.programming.utils.TakeProblemInput;
 import competitive.programming.utils.TkIndex;
 import competitive.programming.utils.Utility;
+import net.steppschuh.markdowngenerator.table.Table;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.commonmark.Extension;
+import org.commonmark.ext.gfm.tables.TableHead;
 import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
@@ -25,7 +28,6 @@ import org.takes.http.Exit;
 import org.takes.http.FtBasic;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -42,6 +44,7 @@ import java.util.OptionalInt;
  * @author Saurabh Dutta (saurabh73)
  * Task method for initProblem Gradle task
  */
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class InitProblemTask extends DefaultTask {
 
     private final CompetitiveProgrammingExtension extension;
@@ -87,8 +90,9 @@ public class InitProblemTask extends DefaultTask {
             }
             Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_BASE_TEST, targetTestFilePath.toFile(), context);
         }
-        Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(),  "solutions.md");
+        Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(), "solutions.md");
         if (!targetMarkdownFile.toFile().exists()) {
+            context.put("markdownTable", MarkdownUtility.defaultTable());
             Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
         }
     }
@@ -122,7 +126,9 @@ public class InitProblemTask extends DefaultTask {
         context.put(Constants.SERIAL_NO, serialNo);
 
         // Generate Problem
-        generateProblemFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass());
+        Path problemFile = generateProblemFile(parsedInput, platform, serialNo);
+        // Generate Markdown File
+        updateMarkdownFile(parsedInput, platform, problemFile);
 
         // Generate Test Files
         Path baseTargetTestResourceFile = prepareTestResource(platform, serialNo);
@@ -133,6 +139,7 @@ public class InitProblemTask extends DefaultTask {
         generateTestFile(platform, serialNo, parsedInput.getLanguages().getJava().getTaskClass(), parsedInput.getTests().size());
 
     }
+
 
     private Path prepareTestResource(String platform, String serialNo) throws IOException {
         String projectDir = project.getProjectDir().getAbsolutePath();
@@ -149,32 +156,53 @@ public class InitProblemTask extends DefaultTask {
     }
 
     private void generateTestResource(Path baseTargetTestFile, String fileBaseName, int index, String data) throws IOException {
-        Path path =  Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index + Constants.TXT_EXTENSION);
+        Path path = Paths.get(Utility.toAbsolutePath(baseTargetTestFile), fileBaseName + index + Constants.TXT_EXTENSION);
         System.out.println("Writing File to Path: " + path.toUri());
         Files.write(path, data.getBytes(StandardCharsets.UTF_8));
     }
 
-    private void generateProblemFile(String platform, String serialNo, String name) throws IOException {
+    private Path generateProblemFile(ProblemInput parsedInput, String platform, String serialNo) throws IOException {
+        String name = parsedInput.getLanguages().getJava().getTaskClass();
         String baseFileName = name + Constants.JAVA_EXTENSION;
         context.put(Constants.NAME, name);
-
         // Generate Problem File
         Path targetFilePath = Paths.get(Utility.getBasePath(project, extension), "platform", platform);
-        File problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName).toFile();
-        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_PROBLEM, problemFile, context);
-
-        // Add to Solutions.md
-        Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(),  "solutions.md");
-        updateMarkdownFile(problemFile, targetMarkdownFile, context);
+        Path problemFile = Paths.get(Utility.toAbsolutePath(targetFilePath), "problem" + serialNo, baseFileName);
+        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_PROBLEM, problemFile.toFile(), context);
+        return problemFile;
     }
 
-    private void updateMarkdownFile(File problemFile, Path targetMarkdownFile, VelocityContext context) {
-        String markdownTable = Utility.parseMarkdownTable(targetMarkdownFile);
+    private void updateMarkdownFile(ProblemInput parsedInput, String platform, Path problemFile) throws IOException {
+        Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(), "solutions.md");
+        final Table.Builder tableBuilder = parseMarkdownFile(targetMarkdownFile);
+
+        // Add to Solutions.md
+        String baseFileName = parsedInput.getLanguages().getJava().getTaskClass() + Constants.JAVA_EXTENSION;
+        String problemLink = String.format("[%s](%s)", parsedInput.getName(), parsedInput.getUrl().toString());
+        String fileLink = String.format("[%s](%s)", baseFileName, problemFile.relativize(Paths.get(project.getProjectDir().getAbsolutePath())));
+        tableBuilder.addRow(problemLink, fileLink, platform, "", "", "");
+
+        context.put("markdownTable", tableBuilder.build());
+        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
+
+    }
+
+
+    private Table.Builder parseMarkdownFile(Path targetMarkdownFile) {
+        String markdownTable = MarkdownUtility.parseMarkdownTable(targetMarkdownFile);
         List<Extension> extensions = Collections.singletonList(TablesExtension.create());
         Parser parser = Parser.builder().extensions(extensions).build();
-        Node document = parser.parse(markdownTable);
-        Node header = document.getFirstChild();
-        System.out.println("Header "+header.toString());
+        Node table = parser.parse(markdownTable).getFirstChild();
+
+        // Parse Table Head
+        Table.Builder tableBuilder = new Table.Builder();
+        TableHead tableHead = (TableHead) table.getFirstChild();
+        MarkdownUtility.paresTableHead(tableHead, tableBuilder);
+        // Parse Table Body
+        Node tableBody = table.getLastChild();
+        MarkdownUtility.parseTableBody(tableBody, tableBuilder);
+
+        return tableBuilder;
     }
 
 

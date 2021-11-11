@@ -103,26 +103,5 @@ public class Utility {
         return fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
     }
 
-    public static String parseMarkdownTable(Path targetMarkdownFile) {
-        StringBuilder resultStringBuilder = new StringBuilder();
-        boolean appendFlag = false;
-        try (BufferedReader br = new BufferedReader(new FileReader(targetMarkdownFile.toFile()))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.equalsIgnoreCase("<!--TABLE_STARTS_HERE-->")) {
-                    appendFlag = true;
-                }
-                if (line.equalsIgnoreCase("<!--TABLE_ENDS_HERE-->")) {
-                    appendFlag = false;
-                }
-                if (appendFlag) {
-                    resultStringBuilder.append(line).append("\n");
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        return resultStringBuilder.toString();
-    }
+
 }
