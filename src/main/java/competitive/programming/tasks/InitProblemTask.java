@@ -178,18 +178,15 @@ public class InitProblemTask extends DefaultTask {
     private void updateMarkdownFile(ProblemInput parsedInput, String platform, Path problemFile) throws IOException {
         Path targetMarkdownFile = Paths.get(project.getProjectDir().getAbsolutePath(), "solutions.md");
         final Table.Builder tableBuilder = parseMarkdownFile(targetMarkdownFile);
-        System.out.println(tableBuilder.build());
-
-        // Add to Solutions.md
-        String baseFileName = parsedInput.getLanguages().getJava().getTaskClass() + Constants.JAVA_EXTENSION;
-        String problemLink = String.format("[%s](%s)", parsedInput.getName(), parsedInput.getUrl().toString());
-        String fileLink = String.format("[%s](%s)", baseFileName, problemFile.relativize(Paths.get(project.getProjectDir().getAbsolutePath())));
-        String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+        final Path basePath = Paths.get(project.getProjectDir().getAbsolutePath());
+        final String baseFileName = parsedInput.getLanguages().getJava().getTaskClass() + Constants.JAVA_EXTENSION;
+        final String problemLink = String.format("[%s](%s)", parsedInput.getName(), parsedInput.getUrl().toString());
+        final String fileLink = String.format("[%s](%s)", baseFileName, basePath.relativize(problemFile));
+        final String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         tableBuilder.addRow(problemLink, fileLink, platform, today, "`todo`", "`pending`", "");
-
-        System.out.println(tableBuilder.build());
-        // context.put("markdownTable", tableBuilder.build().toString());
-        // Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
+        // Add to Solutions.md
+        context.put("markdownTable", tableBuilder.build().toString());
+        Utility.writeFileWithVelocityTemplate(Constants.TEMPLATE_MARKDOWN, targetMarkdownFile.toFile(), context);
     }
 
 
