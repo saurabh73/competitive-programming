@@ -44,7 +44,7 @@
     const payload = formatData(rawData);
     console.log("payload", payload);
     $.ajax({
-      "url": "http://localhost:7373",
+      "url": `http://localhost:${window.location.port}`,
       "method": "POST",
       "headers": {
         "Content-Type": "application/json"
